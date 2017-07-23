@@ -1,0 +1,55 @@
+{
+    "name": "botman/studio-addons",
+    "license": "MIT",
+    "description": "BotMan Studio specific addons.",
+    "keywords": [
+        "Bot",
+        "BotMan",
+        "Studio"
+    ],
+    "homepage": "http://github.com/botman/studio-addons",
+    "authors": [
+        {
+            "name": "Marcel Pociot",
+            "email": "m.pociot@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.0",
+        "illuminate/support": "~5.4.0",
+        "illuminate/console": "~5.4.0",
+        "thecodingmachine/discovery": "^1.2"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~5.0",
+        "mockery/mockery": "dev-master"
+    },
+    "autoload": {
+        "psr-4": {
+            "BotMan\\Studio\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0-dev"
+        }
+    },
+    "extras": {
+        "laravel": {
+            "providers": [
+                "BotMan\\Studio\\Providers\\StudioServiceProvider"
+            ]
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit",
+        "cs": "php-cs-fixer fix"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
