@@ -20,5 +20,4 @@ class Composer extends BaseComposer
 
         $process->run($callback);
     }
-
 }
