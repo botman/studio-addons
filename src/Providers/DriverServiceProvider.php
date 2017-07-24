@@ -2,14 +2,12 @@
 
 namespace BotMan\Studio\Providers;
 
-use App\Console\Kernel;
 use Illuminate\Support\ServiceProvider;
 use BotMan\BotMan\Drivers\DriverManager;
 use TheCodingMachine\Discovery\Discovery;
 
 class DriverServiceProvider extends ServiceProvider
 {
-
     /**
      * @return void
      */
@@ -38,12 +36,11 @@ class DriverServiceProvider extends ServiceProvider
         $stubs = Discovery::getInstance()->getAssetType('botman/driver-config');
 
         foreach ($stubs->getAssets() as $stub) {
-            $configFile = config_path('botman/' . basename($stub->getValue()));
+            $configFile = config_path('botman/'.basename($stub->getValue()));
 
-            if (!file_exists($configFile)) {
-                copy($stub->getPackageDir() . $stub->getValue(), $configFile);
+            if (! file_exists($configFile)) {
+                copy($stub->getPackageDir().$stub->getValue(), $configFile);
             }
         }
     }
-
 }

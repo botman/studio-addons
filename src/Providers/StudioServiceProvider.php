@@ -9,7 +9,6 @@ use BotMan\Studio\Console\Commands\BotManInstallDriver;
 
 class StudioServiceProvider extends ServiceProvider
 {
-
     /**
      * @return void
      */

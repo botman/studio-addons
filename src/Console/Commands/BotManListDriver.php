@@ -5,7 +5,7 @@ namespace BotMan\Studio\Console\Commands;
 use GuzzleHttp\Client;
 use Illuminate\Console\Command;
 
-class BotManListDrivers extends Command
+class BotManListDriver extends Command
 {
     const DRIVER_REPOSITORY_URL = 'https://botman.io/studio/drivers.json';
 
@@ -59,7 +59,7 @@ class BotManListDrivers extends Command
             'Name',
             'Service',
             'Description',
-            'Installed?'
+            'Installed?',
         ];
 
         $tableData = collect($drivers)->transform(function ($driver) {
@@ -67,7 +67,7 @@ class BotManListDrivers extends Command
                 str_replace('botman/driver-', '', $driver->package),
                 $driver->name,
                 $driver->description,
-                $this->isDriverInstalled($driver->package)
+                $this->isDriverInstalled($driver->package),
             ];
         });
 
