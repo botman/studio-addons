@@ -5,7 +5,7 @@ namespace BotMan\Studio\Console\Commands;
 use GuzzleHttp\Client;
 use Illuminate\Console\Command;
 
-class BotManListDriver extends Command
+class BotManListDrivers extends Command
 {
     const DRIVER_REPOSITORY_URL = 'https://botman.io/studio/drivers.json';
 
