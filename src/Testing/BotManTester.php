@@ -3,19 +3,17 @@
 namespace BotMan\Studio\Testing;
 
 use BotMan\BotMan\BotMan;
-use PHPUnit_Framework_TestCase;
 use PHPUnit\Framework\Assert as PHPUnit;
 use BotMan\BotMan\Drivers\Tests\FakeDriver;
 use BotMan\BotMan\Messages\Outgoing\Question;
-use BotMan\BotMan\Messages\Outgoing\OutgoingMessage;
 use BotMan\BotMan\Messages\Incoming\IncomingMessage;
+use BotMan\BotMan\Messages\Outgoing\OutgoingMessage;
 
 /**
- * Class BotManTester
- * @package BotMan\Studio\Testing
+ * Class BotManTester.
  */
-class BotManTester {
-
+class BotManTester
+{
     /** @var BotMan */
     private $bot;
 
@@ -39,9 +37,6 @@ class BotManTester {
         $this->driver = $driver;
     }
 
-    /**
-     *
-     */
     protected function listen()
     {
         $this->bot->listen();
@@ -55,6 +50,7 @@ class BotManTester {
     {
         $this->listen();
         $messages = $this->getMessages();
+
         return array_pop($messages);
     }
 
@@ -74,6 +70,7 @@ class BotManTester {
     public function receives($message)
     {
         $this->driver->messages = [new IncomingMessage($message, $this->username, $this->channel)];
+
         return $this;
     }
 
@@ -84,6 +81,7 @@ class BotManTester {
     public function receivesInteractiveMessage($message)
     {
         $this->driver->isInteractiveMessageReply = true;
+
         return $this->receives($message);
     }
 
@@ -123,7 +121,7 @@ class BotManTester {
      * @param null $text
      * @return $this
      */
-    public function assertQuestion($text=null)
+    public function assertQuestion($text = null)
     {
         $this->listen();
         $messages = $this->getMessages();
@@ -132,7 +130,7 @@ class BotManTester {
         $question = array_pop($messages);
         PHPUnit::assertInstanceOf(Question::class, $question);
 
-        if (!is_null($text)) {
+        if (! is_null($text)) {
             PHPUnit::assertSame($question->getText(), $text);
         }
 
@@ -146,5 +144,4 @@ class BotManTester {
     {
         return $this->driver->getBotMessages();
     }
-
 }

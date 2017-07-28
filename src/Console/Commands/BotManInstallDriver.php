@@ -75,7 +75,7 @@ class BotManInstallDriver extends Command
 
         $this->info('Installing driver "'.$driver['name'].'"');
 
-        $this->composer->install('botman/driver-'.$installDriver, function($type, $data) {
+        $this->composer->install('botman/driver-'.$installDriver, function ($type, $data) {
             $this->info($data);
         });
 
