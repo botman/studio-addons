@@ -94,6 +94,20 @@ class BotManTester
     }
 
     /**
+     * Assert that there are specific multiple replies.
+     *
+     * @param array $expectedMessages
+     */
+    public function assertReplies($expectedMessages) {
+        $this->listen();
+        $actualMessages = $this->getMessages();
+
+        foreach ($actualMessages as $key => $actualMessage) {
+            PHPUnit::assertSame($expectedMessages[$key], $actualMessage->getText());
+        }
+    }
+
+    /**
      * @param $text
      */
     public function assertReplyIsNot($text)
