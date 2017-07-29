@@ -28,6 +28,7 @@ class BotManTester
 
     /**
      * BotManTester constructor.
+     *
      * @param BotMan $bot
      * @param FakeDriver $driver
      */
@@ -98,7 +99,8 @@ class BotManTester
      *
      * @param array $expectedMessages
      */
-    public function assertReplies($expectedMessages) {
+    public function assertReplies($expectedMessages)
+    {
         $this->listen();
         $actualMessages = $this->getMessages();
 
