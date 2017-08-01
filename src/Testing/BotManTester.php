@@ -28,6 +28,7 @@ class BotManTester
 
     /**
      * BotManTester constructor.
+     *
      * @param BotMan $bot
      * @param FakeDriver $driver
      */
@@ -91,6 +92,21 @@ class BotManTester
     public function assertReply($text)
     {
         PHPUnit::assertSame($this->getReply()->getText(), $text);
+    }
+
+    /**
+     * Assert that there are specific multiple replies.
+     *
+     * @param array $expectedMessages
+     */
+    public function assertReplies($expectedMessages)
+    {
+        $this->listen();
+        $actualMessages = $this->getMessages();
+
+        foreach ($actualMessages as $key => $actualMessage) {
+            PHPUnit::assertSame($expectedMessages[$key], $actualMessage->getText());
+        }
     }
 
     /**
