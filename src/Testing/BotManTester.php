@@ -88,16 +88,20 @@ class BotManTester
 
     /**
      * @param $text
+     * @return $this
      */
     public function assertReply($text)
     {
         PHPUnit::assertSame($this->getReply()->getText(), $text);
+
+        return $this;
     }
 
     /**
      * Assert that there are specific multiple replies.
      *
      * @param array $expectedMessages
+     * @return $this
      */
     public function assertReplies($expectedMessages)
     {
@@ -107,30 +111,41 @@ class BotManTester
         foreach ($actualMessages as $key => $actualMessage) {
             PHPUnit::assertSame($expectedMessages[$key], $actualMessage->getText());
         }
+
+        return $this;
     }
 
     /**
      * @param $text
+     * @return $this
      */
     public function assertReplyIsNot($text)
     {
         PHPUnit::assertNotSame($this->getReply()->getText(), $text);
+
+        return $this;
     }
 
     /**
      * @param array $haystack
+     * @return $this
      */
     public function assertReplyIn(array $haystack)
     {
         PHPUnit::assertTrue(in_array($this->getReply()->getText(), $haystack));
+
+        return $this;
     }
 
     /**
      * @param array $haystack
+     * @return $this
      */
     public function assertReplyNotIn(array $haystack)
     {
         PHPUnit::assertFalse(in_array($this->getReply()->getText(), $haystack));
+
+        return $this;
     }
 
     /**
