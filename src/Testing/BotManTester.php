@@ -175,4 +175,21 @@ class BotManTester
     {
         return $this->driver->getBotMessages();
     }
+
+    /**
+     * @test
+     * @param array $payload
+     * @return $this
+     */
+    public function assertPayload(array $payload)
+    {
+        $this->listen();
+        $messages = $this->getMessages();
+
+        /** @var Question $question */
+        $message = array_first($messages);
+        PHPUnit::assertEquals($message->toArray(), $payload);
+
+        return $this;
+    }
 }
