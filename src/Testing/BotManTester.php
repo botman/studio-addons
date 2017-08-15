@@ -74,7 +74,6 @@ class BotManTester
         $this->driver->resetBotMessages();
         $this->listen();
 
-
         return $this;
     }
 
@@ -95,7 +94,7 @@ class BotManTester
      */
     public function assertReply($message)
     {
-        if($this->getReply() instanceof OutgoingMessage) {
+        if ($this->getReply() instanceof OutgoingMessage) {
             PHPUnit::assertSame($this->getReply()->getText(), $message);
         } else {
             PHPUnit::assertEquals($message, $this->getReply());
@@ -115,7 +114,7 @@ class BotManTester
         $actualMessages = $this->getMessages();
 
         foreach ($actualMessages as $key => $actualMessage) {
-            if($actualMessage instanceof OutgoingMessage) {
+            if ($actualMessage instanceof OutgoingMessage) {
                 PHPUnit::assertSame($expectedMessages[$key], $actualMessage->getText());
             } else {
                 PHPUnit::assertEquals($expectedMessages[$key], $actualMessage);
@@ -212,6 +211,7 @@ class BotManTester
         /** @var Question $question */
         $message = array_pop($messages);
         PHPUnit::assertEquals($message->toArray(), $payload);
+
         return $this;
     }
 }
