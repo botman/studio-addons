@@ -200,7 +200,6 @@ class BotManTester
     }
 
     /**
-     * @test
      * @param array $payload
      * @return $this
      */
