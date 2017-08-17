@@ -49,7 +49,6 @@ class BotManTester
      */
     protected function getReply()
     {
-        $this->listen();
         $messages = $this->getMessages();
 
         return array_pop($messages);
@@ -72,6 +71,9 @@ class BotManTester
     {
         $this->driver->messages = [new IncomingMessage($message, $this->username, $this->channel)];
 
+        $this->driver->resetBotMessages();
+        $this->listen();
+
         return $this;
     }
 
@@ -87,50 +89,72 @@ class BotManTester
     }
 
     /**
-     * @param $text
+     * @param $message
+     * @return $this
      */
-    public function assertReply($text)
+    public function assertReply($message)
     {
-        PHPUnit::assertSame($this->getReply()->getText(), $text);
+        if ($this->getReply() instanceof OutgoingMessage) {
+            PHPUnit::assertSame($this->getReply()->getText(), $message);
+        } else {
+            PHPUnit::assertEquals($message, $this->getReply());
+        }
+
+        return $this;
     }
 
     /**
      * Assert that there are specific multiple replies.
      *
      * @param array $expectedMessages
+     * @return $this
      */
     public function assertReplies($expectedMessages)
     {
-        $this->listen();
         $actualMessages = $this->getMessages();
 
         foreach ($actualMessages as $key => $actualMessage) {
-            PHPUnit::assertSame($expectedMessages[$key], $actualMessage->getText());
+            if ($actualMessage instanceof OutgoingMessage) {
+                PHPUnit::assertSame($expectedMessages[$key], $actualMessage->getText());
+            } else {
+                PHPUnit::assertEquals($expectedMessages[$key], $actualMessage);
+            }
         }
+
+        return $this;
     }
 
     /**
      * @param $text
+     * @return $this
      */
     public function assertReplyIsNot($text)
     {
         PHPUnit::assertNotSame($this->getReply()->getText(), $text);
+
+        return $this;
     }
 
     /**
      * @param array $haystack
+     * @return $this
      */
     public function assertReplyIn(array $haystack)
     {
         PHPUnit::assertTrue(in_array($this->getReply()->getText(), $haystack));
+
+        return $this;
     }
 
     /**
      * @param array $haystack
+     * @return $this
      */
     public function assertReplyNotIn(array $haystack)
     {
         PHPUnit::assertFalse(in_array($this->getReply()->getText(), $haystack));
+
+        return $this;
     }
 
     /**
@@ -139,7 +163,6 @@ class BotManTester
      */
     public function assertQuestion($text = null)
     {
-        $this->listen();
         $messages = $this->getMessages();
 
         /** @var Question $question */
@@ -159,5 +182,35 @@ class BotManTester
     public function getMessages()
     {
         return $this->driver->getBotMessages();
+    }
+
+    /**
+     * @param string $template
+     * @return $this
+     */
+    public function assertTemplate(string $template)
+    {
+        $messages = $this->getMessages();
+
+        /** @var Question $question */
+        $message = array_pop($messages);
+        PHPUnit::assertInstanceOf($template, $message);
+
+        return $this;
+    }
+
+    /**
+     * @param array $payload
+     * @return $this
+     */
+    public function assertPayload(array $payload)
+    {
+        $messages = $this->getMessages();
+
+        /** @var Question $question */
+        $message = array_pop($messages);
+        PHPUnit::assertEquals($message->toArray(), $payload);
+
+        return $this;
     }
 }
