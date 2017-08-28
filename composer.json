@@ -16,7 +16,7 @@
     ],
     "require": {
         "php": ">=7.0",
-        "mpociot/botman": "~2.0",
+        "botman/botman": "~2.0",
         "phpunit/phpunit": "~5.0",
         "illuminate/support": "~5.4.0",
         "illuminate/console": "~5.4.0",
@@ -50,7 +50,5 @@
     "scripts": {
         "test": "vendor/bin/phpunit",
         "cs": "php-cs-fixer fix"
-    },
-    "minimum-stability": "dev",
-    "prefer-stable": true
+    }
 }
