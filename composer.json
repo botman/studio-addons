@@ -17,8 +17,8 @@
     "require": {
         "php": ">=7.0",
         "botman/botman": "~2.0",
-        "illuminate/support": "~5.4.0",
-        "illuminate/console": "~5.4.0",
+        "illuminate/support": "~5.4.0|~5.5.0",
+        "illuminate/console": "~5.4.0|~5.5.0",
         "thecodingmachine/discovery": "^1.2"
     },
     "require-dev": {
