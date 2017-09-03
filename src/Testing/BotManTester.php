@@ -78,6 +78,17 @@ class BotManTester
     }
 
     /**
+     * Simulates that we listen for a postback value
+     * but we use the receives method instead.
+     * @param $postbackValue
+     * @return BotManTester
+     */
+    public function receivesPostbackValue($postbackValue)
+    {
+        return $this->receives($postbackValue);
+    }
+
+    /**
      * @param $message
      * @return BotManTester
      */
