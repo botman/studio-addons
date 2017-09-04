@@ -78,6 +78,18 @@ class BotManTester
     }
 
     /**
+     * Simulates that we listen for a value
+     * but we use the receives method instead.
+     *
+     * @param $value
+     * @return BotManTester
+     */
+    public function receivesValue($value)
+    {
+        return $this->receives($value);
+    }
+
+    /**
      * @param $message
      * @return BotManTester
      */
