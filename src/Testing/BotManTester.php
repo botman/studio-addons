@@ -3,9 +3,15 @@
 namespace BotMan\Studio\Testing;
 
 use BotMan\BotMan\BotMan;
+use Illuminate\Support\Collection;
 use PHPUnit\Framework\Assert as PHPUnit;
 use BotMan\BotMan\Drivers\Tests\FakeDriver;
+use BotMan\BotMan\Messages\Attachments\File;
+use BotMan\BotMan\Messages\Attachments\Audio;
+use BotMan\BotMan\Messages\Attachments\Image;
+use BotMan\BotMan\Messages\Attachments\Video;
 use BotMan\BotMan\Messages\Outgoing\Question;
+use BotMan\BotMan\Messages\Attachments\Location;
 use BotMan\BotMan\Messages\Incoming\IncomingMessage;
 use BotMan\BotMan\Messages\Outgoing\OutgoingMessage;
 
@@ -21,7 +27,7 @@ class BotManTester
     private $driver;
 
     /** @var string */
-    private $username = 'botman';
+    private $user_id = '1';
 
     /** @var string */
     private $channel = '#botman';
@@ -58,8 +64,22 @@ class BotManTester
      * @param $driver
      * @return $this
      */
-    public function usingDriver($driver)
+    public function setDriver($driver)
     {
+        $this->driver->setName($driver::DRIVER_NAME);
+
+        return $this;
+    }
+
+    /**
+     * @param array $user_info
+     * @return $this
+     */
+    public function setUser($user_info)
+    {
+        $this->user_id = $user_info['id'] ?? $this->user_id;
+        $this->driver->setUser($user_info);
+
         return $this;
     }
 
@@ -69,24 +89,21 @@ class BotManTester
      */
     public function receives($message)
     {
-        $this->driver->messages = [new IncomingMessage($message, $this->username, $this->channel)];
+        return $this->receivesRaw(new IncomingMessage($message, $this->user_id, $this->channel));
+    }
+
+    /**
+     * @param IncomingMessage $message
+     * @return $this
+     */
+    public function receivesRaw($message)
+    {
+        $this->driver->messages = [$message];
 
         $this->driver->resetBotMessages();
         $this->listen();
 
         return $this;
-    }
-
-    /**
-     * Simulates that we listen for a value
-     * but we use the receives method instead.
-     *
-     * @param $value
-     * @return BotManTester
-     */
-    public function receivesValue($value)
-    {
-        return $this->receives($value);
     }
 
     /**
@@ -101,13 +118,116 @@ class BotManTester
     }
 
     /**
+     * @param $latitude
+     * @param $longitude
+     * @return $this
+     */
+    public function receivesLocation($latitude = 24, $longitude = 57)
+    {
+        $message = new IncomingMessage(Location::PATTERN, $this->user_id, $this->channel);
+        $message->setLocation(new Location($latitude, $longitude, null));
+
+        return $this->receivesRaw($message);
+    }
+
+    /**
+     * @param array $urls
+     * @return $this
+     */
+    public function receivesImages(array $urls = null)
+    {
+        if (is_null($urls)) {
+            $images = [new Image('https://via.placeholder.com/350x150')];
+        } else {
+            $images = Collection::make($urls)->map(function ($url) {
+                return new Image(($url));
+            })->toArray();
+        }
+        $message = new IncomingMessage(Image::PATTERN, $this->user_id, $this->channel);
+        $message->setImages($images);
+
+        return $this->receivesRaw($message);
+    }
+
+    /**
+     * @param array $urls
+     * @return $this
+     */
+    public function receivesAudio(array $urls = null)
+    {
+        if (is_null($urls)) {
+            $audio = [new Audio('https://www.youtube.com/watch?v=4zzSw-0IShE')];
+        }
+        if (is_array($urls)) {
+            $audio = Collection::make($urls)->map(function ($url) {
+                return new Audio(($url));
+            })->toArray();
+        }
+        $message = new IncomingMessage(Audio::PATTERN, $this->user_id, $this->channel);
+        $message->setAudio($audio);
+
+        return $this->receivesRaw($message);
+    }
+
+    /**
+     * @param array|null $urls
+     * @return $this
+     */
+    public function receivesVideos(array $urls = null)
+    {
+        if (is_null($urls)) {
+            $videos = [new Video('https://www.youtube.com/watch?v=4zzSw-0IShE')];
+        } else {
+            $videos = Collection::make($urls)->map(function ($url) {
+                return new Video(($url));
+            })->toArray();
+        }
+        $message = new IncomingMessage(Video::PATTERN, $this->user_id, $this->channel);
+        $message->setVideos($videos);
+
+        return $this->receivesRaw($message);
+    }
+
+    /**
+     * @param array|null $urls
+     * @return $this
+     */
+    public function receivesFiles(array $urls = null)
+    {
+        if (is_null($urls)) {
+            $files = [new File('https://www.youtube.com/watch?v=4zzSw-0IShE')]; // TODO : default video
+        } else {
+            $files = Collection::make($urls)->map(function ($url) {
+                return new File(($url));
+            })->toArray();
+        }
+        $message = new IncomingMessage(File::PATTERN, $this->user_id, $this->channel);
+        $message->setFiles($files);
+
+        return $this->receivesRaw($message);
+    }
+
+    /**
+     * @param $name
+     * @param $payload
+     * @return $this
+     */
+    public function receivesEvent($name, $payload = null)
+    {
+        $this->driver->setEventName($name);
+        $this->driver->setEventPayload($payload);
+
+        return $this->receives(new IncomingMessage('', $this->user_id, $this->channel));
+    }
+
+    /**
      * @param $message
      * @return $this
      */
     public function assertReply($message)
     {
         if ($this->getReply() instanceof OutgoingMessage) {
-            PHPUnit::assertSame($this->getReply()->getText(), $message);
+            PHPUnit::assertSame($message, $this->getReply()->getText());
         } else {
             PHPUnit::assertEquals($message, $this->getReply());
         }
