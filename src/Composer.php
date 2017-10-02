@@ -19,7 +19,7 @@ class Composer extends BaseComposer
         $process->setCommandLine(trim($this->findComposer().' require '.$package));
 
         $process->run($callback);
-        
+
         return $process->isSuccessful();
     }
 }
