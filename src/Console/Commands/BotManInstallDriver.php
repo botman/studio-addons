@@ -5,6 +5,7 @@ namespace BotMan\Studio\Console\Commands;
 use GuzzleHttp\Client;
 use BotMan\Studio\Composer;
 use Illuminate\Console\Command;
+use Symfony\Component\Process\Exception\ProcessFailedException;
 
 class BotManInstallDriver extends Command
 {
@@ -75,9 +76,15 @@ class BotManInstallDriver extends Command
 
         $this->info('Installing driver "'.$driver['name'].'"');
 
-        $this->composer->install('botman/driver-'.$installDriver, function ($type, $data) {
-            $this->info($data);
-        });
+        try {
+            $this->composer->install('botman/driver-'.$installDriver, function ($type, $data) {
+                $this->info($data);
+            });
+        } catch (ProcessFailedException $e) {
+            $this->error('Unable to install driver "'.$driver['name'].'":');
+            $this->error($e->getMessage());
+            exit(1);
+        }
 
         $this->info('Successfully installed driver "'.$driver['name'].'"');
     }

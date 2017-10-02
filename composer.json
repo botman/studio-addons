@@ -19,7 +19,8 @@
         "botman/botman": "~2.0",
         "illuminate/support": "~5.4.0|~5.5.0",
         "illuminate/console": "~5.4.0|~5.5.0",
-        "thecodingmachine/discovery": "^1.2"
+        "thecodingmachine/discovery": "^1.2",
+        "symfony/process": "^3.3"
     },
     "require-dev": {
         "phpunit/phpunit": "~5.0",
