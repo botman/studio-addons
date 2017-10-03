@@ -56,9 +56,8 @@ class BotManTester
      */
     protected function getReply()
     {
-        $messages = $this->getMessages();
-
-        return array_pop($messages);
+        $message = $this->driver->getBotMessage();
+        return $message;
     }
 
     /**
@@ -228,10 +227,11 @@ class BotManTester
      */
     public function assertReply($message)
     {
-        if ($this->getReply() instanceof OutgoingMessage) {
-            PHPUnit::assertSame($message, $this->getReply()->getText());
+        $reply = $this->getReply();
+        if ($reply instanceof OutgoingMessage) {
+            PHPUnit::assertSame($message, $reply->getText());
         } else {
-            PHPUnit::assertEquals($message, $this->getReply());
+            PHPUnit::assertEquals($message, $reply);
         }
 
         return $this;
@@ -297,14 +297,12 @@ class BotManTester
      */
     public function assertQuestion($text = null)
     {
-        $messages = $this->getMessages();
-
         /** @var Question $question */
-        $question = array_pop($messages);
+        $question = $this->getReply();
         PHPUnit::assertInstanceOf(Question::class, $question);
 
         if (! is_null($text)) {
-            PHPUnit::assertSame($question->getText(), $text);
+            PHPUnit::assertSame($text, $question->getText());
         }
 
         return $this;
@@ -324,12 +322,7 @@ class BotManTester
      */
     public function assertTemplate(string $template)
     {
-        $messages = $this->getMessages();
-
-        /** @var Question $question */
-        $message = array_pop($messages);
-        PHPUnit::assertInstanceOf($template, $message);
-
+        PHPUnit::assertInstanceOf($template, $this->getReply());
         return $this;
     }
 
