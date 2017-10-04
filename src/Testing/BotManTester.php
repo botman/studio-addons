@@ -69,7 +69,6 @@ class BotManTester
         return $this->driver->getBotMessages();
     }
 
-
     /**
      * @param $driver
      * @return $this
@@ -329,7 +328,6 @@ class BotManTester
         return $this;
     }
 
-
     /**
      * @param string $template
      * @param bool $strict
@@ -340,7 +338,7 @@ class BotManTester
         $message = $this->getReply();
         PHPUnit::assertInstanceOf($template, $message);
 
-        if($strict){
+        if ($strict) {
             PHPUnit::assertSame($template, $message);
         }
 
@@ -364,7 +362,7 @@ class BotManTester
      */
     public function reply($times = 1)
     {
-        foreach (range(1, $times) as $time){
+        foreach (range(1, $times) as $time) {
             $this->getReply();
         }
 
