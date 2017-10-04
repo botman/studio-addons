@@ -358,4 +358,17 @@ class BotManTester
         return $this;
     }
 
+    /**
+     * @param int $times
+     * @return $this
+     */
+    public function reply($times = 1)
+    {
+        foreach (range(1, $times) as $time){
+            $this->getReply();
+        }
+
+        return $this;
+    }
+
 }
