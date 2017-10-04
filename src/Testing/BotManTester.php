@@ -368,5 +368,4 @@ class BotManTester
 
         return $this;
     }
-
 }
