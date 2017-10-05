@@ -26,6 +26,9 @@ class BotManTester
     /** @var FakeDriver */
     private $driver;
 
+    /** @var array */
+    private $botMessages = [];
+
     /** @var string */
     private $user_id = '1';
 
@@ -55,9 +58,15 @@ class BotManTester
      */
     protected function getReply()
     {
-        $messages = $this->getMessages();
+        return array_shift($this->botMessages);
+    }
 
-        return array_pop($messages);
+    /**
+     * @return Question[]|string[]|Template[]
+     */
+    public function getMessages()
+    {
+        return $this->driver->getBotMessages();
     }
 
     /**
@@ -84,15 +93,6 @@ class BotManTester
     }
 
     /**
-     * @param $message
-     * @return $this
-     */
-    public function receives($message)
-    {
-        return $this->receivesRaw(new IncomingMessage($message, $this->user_id, $this->channel));
-    }
-
-    /**
      * @param IncomingMessage $message
      * @return $this
      */
@@ -103,11 +103,22 @@ class BotManTester
         $this->driver->resetBotMessages();
         $this->listen();
 
+        $this->botMessages = $this->getMessages();
+
         return $this;
     }
 
     /**
-     * @param $message
+     * @param string $message
+     * @return $this
+     */
+    public function receives($message)
+    {
+        return $this->receivesRaw(new IncomingMessage($message, $this->user_id, $this->channel));
+    }
+
+    /**
+     * @param string $message
      * @return BotManTester
      */
     public function receivesInteractiveMessage($message)
@@ -195,7 +206,7 @@ class BotManTester
     public function receivesFiles(array $urls = null)
     {
         if (is_null($urls)) {
-            $files = [new File('https://www.youtube.com/watch?v=4zzSw-0IShE')]; // TODO : default video
+            $files = [new File('https://www.youtube.com/watch?v=4zzSw-0IShE')];
         } else {
             $files = Collection::make($urls)->map(function ($url) {
                 return new File(($url));
@@ -217,7 +228,7 @@ class BotManTester
         $this->driver->setEventName($name);
         $this->driver->setEventPayload($payload);
 
-        return $this->receives(new IncomingMessage('', $this->user_id, $this->channel));
+        return $this->receivesRaw(new IncomingMessage('', $this->user_id, $this->channel));
     }
 
     /**
@@ -226,10 +237,11 @@ class BotManTester
      */
     public function assertReply($message)
     {
-        if ($this->getReply() instanceof OutgoingMessage) {
-            PHPUnit::assertSame($message, $this->getReply()->getText());
+        $reply = $this->getReply();
+        if ($reply instanceof OutgoingMessage) {
+            PHPUnit::assertSame($message, $reply->getText());
         } else {
-            PHPUnit::assertEquals($message, $this->getReply());
+            PHPUnit::assertEquals($message, $reply);
         }
 
         return $this;
@@ -290,58 +302,69 @@ class BotManTester
     }
 
     /**
+     * @return $this
+     */
+    public function assertReplyNothing()
+    {
+        PHPUnit::assertNull($this->getReply());
+
+        return $this;
+    }
+
+    /**
      * @param null $text
      * @return $this
      */
     public function assertQuestion($text = null)
     {
-        $messages = $this->getMessages();
-
         /** @var Question $question */
-        $question = array_pop($messages);
+        $question = $this->getReply();
         PHPUnit::assertInstanceOf(Question::class, $question);
 
         if (! is_null($text)) {
-            PHPUnit::assertSame($question->getText(), $text);
+            PHPUnit::assertSame($text, $question->getText());
         }
 
         return $this;
     }
 
     /**
-     * @return Question[]|\string[]
-     */
-    public function getMessages()
-    {
-        return $this->driver->getBotMessages();
-    }
-
-    /**
      * @param string $template
+     * @param bool $strict
      * @return $this
      */
-    public function assertTemplate(string $template)
+    public function assertTemplate(string $template, $strict = false)
     {
-        $messages = $this->getMessages();
-
-        /** @var Question $question */
-        $message = array_pop($messages);
+        $message = $this->getReply();
         PHPUnit::assertInstanceOf($template, $message);
+
+        if ($strict) {
+            PHPUnit::assertSame($template, $message);
+        }
 
         return $this;
     }
 
     /**
-     * @param array $payload
+     * @param OutgoingMessage $message
      * @return $this
      */
-    public function assertPayload(array $payload)
+    public function assertRaw($message)
     {
-        $messages = $this->getMessages();
+        PHPUnit::assertSame($message, $this->getReply());
 
-        /** @var Question $question */
-        $message = array_pop($messages);
-        PHPUnit::assertEquals($message->toArray(), $payload);
+        return $this;
+    }
+
+    /**
+     * @param int $times
+     * @return $this
+     */
+    public function reply($times = 1)
+    {
+        foreach (range(1, $times) as $time) {
+            $this->getReply();
+        }
 
         return $this;
     }
