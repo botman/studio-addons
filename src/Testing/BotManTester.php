@@ -96,7 +96,7 @@ class BotManTester
      * @param IncomingMessage $message
      * @return $this
      */
-    public function receivesIncomingMessage($message)
+    public function receivesRaw($message)
     {
         $this->driver->messages = [$message];
 
@@ -114,7 +114,7 @@ class BotManTester
      */
     public function receives($message)
     {
-        return $this->receivesIncomingMessage(new IncomingMessage($message, $this->user_id, $this->channel));
+        return $this->receivesRaw(new IncomingMessage($message, $this->user_id, $this->channel));
     }
 
     /**
@@ -138,7 +138,7 @@ class BotManTester
         $message = new IncomingMessage(Location::PATTERN, $this->user_id, $this->channel);
         $message->setLocation(new Location($latitude, $longitude, null));
 
-        return $this->receivesIncomingMessage($message);
+        return $this->receivesRaw($message);
     }
 
     /**
@@ -157,7 +157,7 @@ class BotManTester
         $message = new IncomingMessage(Image::PATTERN, $this->user_id, $this->channel);
         $message->setImages($images);
 
-        return $this->receivesIncomingMessage($message);
+        return $this->receivesRaw($message);
     }
 
     /**
@@ -177,7 +177,7 @@ class BotManTester
         $message = new IncomingMessage(Audio::PATTERN, $this->user_id, $this->channel);
         $message->setAudio($audio);
 
-        return $this->receivesIncomingMessage($message);
+        return $this->receivesRaw($message);
     }
 
     /**
@@ -196,7 +196,7 @@ class BotManTester
         $message = new IncomingMessage(Video::PATTERN, $this->user_id, $this->channel);
         $message->setVideos($videos);
 
-        return $this->receivesIncomingMessage($message);
+        return $this->receivesRaw($message);
     }
 
     /**
@@ -215,7 +215,7 @@ class BotManTester
         $message = new IncomingMessage(File::PATTERN, $this->user_id, $this->channel);
         $message->setFiles($files);
 
-        return $this->receivesIncomingMessage($message);
+        return $this->receivesRaw($message);
     }
 
     /**
@@ -228,7 +228,7 @@ class BotManTester
         $this->driver->setEventName($name);
         $this->driver->setEventPayload($payload);
 
-        return $this->receivesIncomingMessage(new IncomingMessage('', $this->user_id, $this->channel));
+        return $this->receivesRaw(new IncomingMessage('', $this->user_id, $this->channel));
     }
 
     /**
@@ -357,7 +357,7 @@ class BotManTester
      * @param OutgoingMessage $message
      * @return $this
      */
-    public function assertOutgoingMessage($message)
+    public function assertRaw($message)
     {
         PHPUnit::assertSame($message, $this->getReply());
 
@@ -368,7 +368,7 @@ class BotManTester
      * @param int $times
      * @return $this
      */
-    public function skipReply($times = 1)
+    public function reply($times = 1)
     {
         foreach (range(1, $times) as $time) {
             $this->getReply();
