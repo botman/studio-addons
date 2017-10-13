@@ -5,8 +5,8 @@ namespace Tests;
 use Spatie\Menu\Laravel\Menu;
 use Orchestra\Testbench\TestCase;
 use BotMan\Studio\Providers\RouteServiceProvider;
-use BotMan\Studio\Providers\StudioServiceProvider;
 use BotMan\Studio\Providers\DriverServiceProvider;
+use BotMan\Studio\Providers\StudioServiceProvider;
 
 class ProviderTest extends TestCase
 {
@@ -26,7 +26,7 @@ class ProviderTest extends TestCase
         return [
             StudioServiceProvider::class,
             DriverServiceProvider::class,
-            RouteServiceProvider::class
+            RouteServiceProvider::class,
         ];
     }
 

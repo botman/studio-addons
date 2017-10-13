@@ -7,7 +7,6 @@ use Illuminate\Support\ServiceProvider;
 
 class RouteServiceProvider extends ServiceProvider
 {
-
     /**
      * This namespace is applied to your controller routes.
      *
@@ -44,8 +43,8 @@ class RouteServiceProvider extends ServiceProvider
         Route::middleware('web')
              ->prefix('studio')
              ->namespace($this->namespace)
-             ->group(function() {
-                $this->addRoutes();
-            });
+             ->group(function () {
+                 $this->addRoutes();
+             });
     }
 }
