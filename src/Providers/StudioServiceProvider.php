@@ -56,6 +56,7 @@ class StudioServiceProvider extends ServiceProvider
             if ($this->segment(1) === 'studio') {
                 return 'studio';
             }
+
             return 'web';
         });
         Request::macro('isWeb', function () {

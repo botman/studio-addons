@@ -46,7 +46,7 @@ class BotManTesterTest extends TestCase
     /** @test */
     public function it_can_fake_incoming_messages()
     {
-        $this->botman->hears('message', function($bot) {
+        $this->botman->hears('message', function ($bot) {
             $bot->reply('hello!');
         });
 
@@ -61,7 +61,7 @@ class BotManTesterTest extends TestCase
     /** @test */
     public function it_can_fake_user_information()
     {
-        $this->botman->hears('message', function($bot) {
+        $this->botman->hears('message', function ($bot) {
             $user = $bot->getUser();
             $bot->reply('ID: '.$user->getId());
             $bot->reply('First: '.$user->getFirstName());
@@ -73,7 +73,7 @@ class BotManTesterTest extends TestCase
             'id' => 5,
             'first_name' => 'Marcel',
             'last_name' => 'Pociot',
-            'username' => 'marcelpociot'
+            'username' => 'marcelpociot',
         ]);
         $this->tester->receives('message');
         $messages = $this->tester->getMessages();
@@ -88,7 +88,7 @@ class BotManTesterTest extends TestCase
     /** @test */
     public function it_can_assert_replies()
     {
-        $this->botman->hears('message', function($bot) {
+        $this->botman->hears('message', function ($bot) {
             $bot->reply('hello!');
         });
 
@@ -99,7 +99,7 @@ class BotManTesterTest extends TestCase
     /** @test */
     public function it_can_assert_replies_are_not()
     {
-        $this->botman->hears('message', function($bot) {
+        $this->botman->hears('message', function ($bot) {
             $bot->reply('hello!');
         });
 
@@ -110,7 +110,7 @@ class BotManTesterTest extends TestCase
     /** @test */
     public function it_can_assert_replies_are_in_an_array()
     {
-        $this->botman->hears('message', function($bot) {
+        $this->botman->hears('message', function ($bot) {
             $bot->reply('hello!');
         });
 
@@ -121,7 +121,7 @@ class BotManTesterTest extends TestCase
     /** @test */
     public function it_can_assert_replies_are_not_in_an_array()
     {
-        $this->botman->hears('message', function($bot) {
+        $this->botman->hears('message', function ($bot) {
             $bot->reply('hello!');
         });
 
@@ -132,7 +132,7 @@ class BotManTesterTest extends TestCase
     /** @test */
     public function it_can_assert_generic_replies()
     {
-        $this->botman->hears('message', function($bot) {
+        $this->botman->hears('message', function ($bot) {
             $bot->reply('1');
             $bot->reply('2');
             $bot->reply('3');
@@ -146,7 +146,7 @@ class BotManTesterTest extends TestCase
     /** @test */
     public function it_can_assert_replies_are_not_present()
     {
-        $this->botman->hears('message', function($bot) {
+        $this->botman->hears('message', function ($bot) {
         });
 
         $this->tester->receives('message');
@@ -157,7 +157,7 @@ class BotManTesterTest extends TestCase
     public function it_can_assert_raw_replies()
     {
         $out = new OutgoingMessage('hello');
-        $this->botman->hears('message', function($bot) use ($out) {
+        $this->botman->hears('message', function ($bot) use ($out) {
             $bot->reply($out);
         });
 
@@ -168,7 +168,7 @@ class BotManTesterTest extends TestCase
     /** @test */
     public function it_can_assert_multiple_replies()
     {
-        $this->botman->hears('message', function($bot) {
+        $this->botman->hears('message', function ($bot) {
             $bot->reply('message 1');
             $bot->reply('message 2');
             $bot->reply('message 3');
@@ -185,8 +185,8 @@ class BotManTesterTest extends TestCase
     /** @test */
     public function it_can_fake_interactive_messages()
     {
-        $this->botman->hears('message', function($bot) {
-            $bot->ask('question', function($answer) {
+        $this->botman->hears('message', function ($bot) {
+            $bot->ask('question', function ($answer) {
                 if ($answer->isInteractiveMessageReply()) {
                     $this->say('success');
                 } else {
@@ -203,7 +203,7 @@ class BotManTesterTest extends TestCase
     /** @test */
     public function it_can_fake_locations()
     {
-        $this->botman->hears(Location::PATTERN, function($bot) {
+        $this->botman->hears(Location::PATTERN, function ($bot) {
             /** @var Location $location */
             $location = $bot->getMessage()->getLocation();
             $bot->reply('Lat: '.$location->getLatitude());
@@ -218,7 +218,7 @@ class BotManTesterTest extends TestCase
     /** @test */
     public function it_can_fake_images()
     {
-        $this->botman->hears(Image::PATTERN, function($bot) {
+        $this->botman->hears(Image::PATTERN, function ($bot) {
             $images = $bot->getMessage()->getImages();
             $bot->reply('Image: '.$images[0]->getUrl());
         });
@@ -233,7 +233,7 @@ class BotManTesterTest extends TestCase
     /** @test */
     public function it_can_fake_videos()
     {
-        $this->botman->hears(Video::PATTERN, function($bot) {
+        $this->botman->hears(Video::PATTERN, function ($bot) {
             $videos = $bot->getMessage()->getVideos();
             $bot->reply('Video: '.$videos[0]->getUrl());
         });
@@ -248,7 +248,7 @@ class BotManTesterTest extends TestCase
     /** @test */
     public function it_can_fake_audio()
     {
-        $this->botman->hears(Audio::PATTERN, function($bot) {
+        $this->botman->hears(Audio::PATTERN, function ($bot) {
             $audio = $bot->getMessage()->getAudio();
             $bot->reply('Audio: '.$audio[0]->getUrl());
         });
@@ -263,7 +263,7 @@ class BotManTesterTest extends TestCase
     /** @test */
     public function it_can_fake_files()
     {
-        $this->botman->hears(File::PATTERN, function($bot) {
+        $this->botman->hears(File::PATTERN, function ($bot) {
             $files = $bot->getMessage()->getFiles();
             $bot->reply('File: '.$files[0]->getUrl());
         });
@@ -278,7 +278,7 @@ class BotManTesterTest extends TestCase
     /** @test */
     public function it_can_fake_events()
     {
-        $this->botman->on('event', function($payload, $bot) {
+        $this->botman->on('event', function ($payload, $bot) {
             $bot->reply('Payload: '.$payload);
         });
 
@@ -289,8 +289,8 @@ class BotManTesterTest extends TestCase
     /** @test */
     public function it_can_test_questions()
     {
-        $this->botman->hears('message', function($bot) {
-            $bot->ask(Question::create('question'), function($answer) {
+        $this->botman->hears('message', function ($bot) {
+            $bot->ask(Question::create('question'), function ($answer) {
                 $this->say('success');
             });
         });
@@ -300,8 +300,8 @@ class BotManTesterTest extends TestCase
         $this->tester->receives('answer');
         $this->tester->assertReply('success');
 
-        $this->botman->hears('message', function($bot) {
-            $bot->ask(Question::create('question'), function($answer) {
+        $this->botman->hears('message', function ($bot) {
+            $bot->ask(Question::create('question'), function ($answer) {
                 $this->say('success');
             });
         });
