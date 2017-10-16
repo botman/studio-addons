@@ -17,6 +17,14 @@ class DriverServiceProvider extends ServiceProvider
     }
 
     /**
+     * @return void
+     */
+    public function boot()
+    {
+        //
+    }
+
+    /**
      * Auto-discover BotMan drivers and load them.
      */
     public function discoverDrivers()
