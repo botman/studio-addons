@@ -39,7 +39,7 @@
             "Tests\\": "tests/"
         }
     },
-    "extras": {
+    "extra": {
         "laravel": {
             "providers": [
                 "BotMan\\Studio\\Providers\\StudioServiceProvider",
