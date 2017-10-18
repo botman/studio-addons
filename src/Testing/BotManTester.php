@@ -274,7 +274,14 @@ class BotManTester
      */
     public function assertReplyIsNot($text)
     {
-        PHPUnit::assertNotSame($this->getReply()->getText(), $text);
+        $message = $this->getReply();
+        if ($message instanceof OutgoingMessage) {
+            PHPUnit::assertNotSame($message->getText(), $text);
+        } else {
+            PHPUnit::assertNotEquals($message, $text);
+        }
+
+        array_unshift($this->botMessages, $message);
 
         return $this;
     }
