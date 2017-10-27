@@ -322,7 +322,7 @@ class BotManTester
      * @param null $text
      * @return $this
      */
-    public function assertQuestion($text = null)
+    public function assertQuestion($text = null, $closure = null)
     {
         /** @var Question $question */
         $question = $this->getReply();
@@ -330,6 +330,10 @@ class BotManTester
 
         if (! is_null($text)) {
             PHPUnit::assertSame($text, $question->getText());
+        }
+
+        if (is_callable($closure)){
+            call_user_func($closure, new QuestionTester($question));
         }
 
         return $this;
