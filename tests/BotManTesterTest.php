@@ -2,6 +2,17 @@
 
 namespace Tests;
 
+use BotMan\BotMan\Messages\Outgoing\Actions\Button;
+use BotMan\Drivers\Facebook\Extensions\ButtonTemplate;
+use BotMan\Drivers\Facebook\Extensions\Element;
+use BotMan\Drivers\Facebook\Extensions\ElementButton;
+use BotMan\Drivers\Facebook\Extensions\GenericTemplate;
+use BotMan\Drivers\Facebook\Extensions\ListTemplate;
+use BotMan\Drivers\Facebook\Extensions\ReceiptAddress;
+use BotMan\Drivers\Facebook\Extensions\ReceiptElement;
+use BotMan\Drivers\Facebook\Extensions\ReceiptSummary;
+use BotMan\Drivers\Facebook\Extensions\ReceiptTemplate;
+use BotMan\Studio\Testing\ButtonTester;
 use Mockery as m;
 use BotMan\BotMan\BotMan;
 use PHPUnit\Framework\TestCase;
@@ -310,5 +321,380 @@ class BotManTesterTest extends TestCase
         $this->tester->assertQuestion('question');
         $this->tester->receives('answer');
         $this->tester->assertReply('success');
+    }
+
+    /** @test */
+    public function it_can_test_question_with_closure()
+    {
+        $this->botman->hears('message', function ($bot) {
+            $bot->ask(Question::create('question'), function ($answer) {
+                $this->say('success');
+            });
+        });
+
+        $this->tester->receives('message');
+        $this->tester->assertQuestion(null, function($q) {
+            $q->assertText('question');
+        });
+        $this->tester->receives('answer');
+        $this->tester->assertReply('success');
+    }
+
+    /** @test */
+    public function it_can_test_question_callback_and_fallback()
+    {
+        $question = Question::create('question')
+            ->fallback('fallback')
+            ->callbackId('callback_id');
+        $this->botman->hears('message', function ($bot) use ($question) {
+            $bot->ask($question, function ($answer) {
+                $this->say('success');
+            });
+        });
+
+        $this->tester->receives('message');
+        $this->tester->assertQuestion(null, function($q) {
+            $q->assertFallback('fallback');
+            $q->assertCallbackId('callback_id');
+        });
+        $this->tester->receives('answer');
+        $this->tester->assertReply('success');
+    }
+
+    /** @test */
+    public function it_can_test_question_button_count()
+    {
+        $question = Question::create('question')
+            ->addButtons([
+                Button::create('First')->value('first'),
+                Button::create('Second')->value('second'),
+            ]);
+        $this->botman->hears('message', function ($bot) use ($question) {
+            $bot->ask($question, function ($answer) {
+                $this->say('success');
+            });
+        });
+
+        $this->tester->receives('message');
+        $this->tester->assertQuestion(null, function($q) {
+            $q->assertButtonCount(2);
+        });
+    }
+
+    /** @test */
+    public function it_can_test_question_specific_button()
+    {
+        $question = Question::create('question')
+            ->addButtons([
+                Button::create('First')->value('first'),
+                Button::create('Second')->value('second'),
+            ]);
+        $this->botman->hears('message', function ($bot) use ($question) {
+            $bot->ask($question, function ($answer) {
+                $this->say('success');
+            });
+        });
+
+        $this->tester->receives('message');
+        $this->tester->assertQuestion(null, function($q) {
+            $q->assertButton(0, function($b) {
+                $b->assertText('First');
+                $b->assertValue('first');
+            });
+            $q->assertButton(1, function($b) {
+                $b->assertText('Second');
+                $b->assertValue('second');
+            });
+        });
+    }
+
+    /** @test */
+    public function it_can_test_question_specific_button_is_not()
+    {
+        $question = Question::create('question')
+            ->addButtons([
+                Button::create('First')->value('first'),
+                Button::create('Second')->value('second'),
+            ]);
+        $this->botman->hears('message', function ($bot) use ($question) {
+            $bot->ask($question, function ($answer) {
+                $this->say('success');
+            });
+        });
+
+        $this->tester->receives('message');
+        $this->tester->assertQuestion(null, function($q) {
+            $q->assertButton(0, function($b) {
+                $b->assertTextisNot('Second');
+                $b->assertValueisNot('second');
+            });
+            $q->assertButton(1, function($b) {
+                $b->assertTextisNot('First');
+                $b->assertValueisNot('first');
+            });
+        });
+    }
+
+    /** @test */
+    public function it_can_test_question_first_and_last_button()
+    {
+        $question = Question::create('question')
+            ->addButtons([
+                Button::create('First')->value('first'),
+                Button::create('Second')->value('second'),
+                Button::create('Third')->value('third'),
+                Button::create('Forth')->value('forth'),
+            ]);
+        $this->botman->hears('message', function ($bot) use ($question) {
+            $bot->ask($question, function ($answer) {
+                $this->say('success');
+            });
+        });
+
+        $this->tester->receives('message');
+        $this->tester->assertQuestion(null, function($q) {
+            $q->assertFirstButton( function($b) {
+                $b->assertText('First');
+            });
+            $q->assertLastButton(function($b) {
+                $b->assertText('Forth');
+            });
+        });
+    }
+
+    /** @test */
+    public function it_can_test_template()
+    {
+        $this->botman->hears('generic', function ($bot){
+            $bot->reply(GenericTemplate::create()
+                ->addElement(Element::create('title'))
+            );
+        });
+
+        $this->tester->receives('generic');
+        $this->tester->assertTemplate(GenericTemplate::class);
+    }
+
+    /** @test */
+    public function it_can_test_template_with_closure()
+    {
+        $this->botman->hears('button', function ($bot){
+            $bot->reply(ButtonTemplate::create('text')
+                ->addButton(ElementButton::create('First')->type('web_url')->url('www.botman.io'))
+            );
+        });
+
+        $this->tester->receives('button');
+        $this->tester->assertTemplate(ButtonTemplate::class, function($t) {
+            $t->assertText('text');
+        });
+    }
+
+    /** @test */
+    public function it_can_test_template_image_aspect_ratio()
+    {
+        $this->botman->hears('generic', function ($bot){
+            $bot->reply(GenericTemplate::create()
+                ->addElement(Element::create('title'))
+                ->addImageAspectRatio(GenericTemplate::RATIO_HORIZONTAL)
+            );
+        });
+
+        $this->tester->receives('generic');
+        $this->tester->assertTemplate(GenericTemplate::class, function($t) {
+            $t->assertImageAspectRatio(GenericTemplate::RATIO_HORIZONTAL);
+        });
+    }
+
+    /** @test */
+    public function it_can_test_list_template_attributes()
+    {
+        $this->botman->hears('list', function ($bot){
+            $bot->reply(ListTemplate::create()
+                ->addElement(Element::create('title'))
+                ->useCompactView()
+                ->addGlobalButton(ElementButton::create('First'))
+            );
+        });
+
+        $this->tester->receives('list');
+        $this->tester->assertTemplate(ListTemplate::class, function($t) {
+            $t->assertTopElementStyle('compact');
+            $t->assertButtons(function ($b) {
+                $b->assertTitle('First');
+            });
+        });
+    }
+
+    /** @test */
+    public function it_can_test_template_attributes_is_not()
+    {
+        $this->botman->hears('button', function ($bot){
+            $bot->reply(ButtonTemplate::create('text')
+                ->addButton(ElementButton::create('First')->type('web_url')->url('www.botman.io'))
+            );
+        });
+
+        $this->tester->receives('button');
+        $this->tester->assertTemplate(ButtonTemplate::class, function($t) {
+            $t->assertTextIsNot('txet');
+        });
+    }
+
+    /** @test */
+    public function it_can_test_template_element_count()
+    {
+        $this->botman->hears('generic', function ($bot){
+            $bot->reply(GenericTemplate::create()
+                ->addElements([
+                    Element::create('First'),
+                    Element::create('Second')
+                ])
+            );
+        });
+
+        $this->tester->receives('generic');
+        $this->tester->assertTemplate(GenericTemplate::class, function($t) {
+            $t->assertElementCount(2);
+        });
+    }
+
+    /** @test */
+    public function it_can_test_template_specific_element()
+    {
+        $this->botman->hears('generic', function ($bot){
+            $bot->reply(GenericTemplate::create()
+                ->addElements([
+                    Element::create('First')->subtitle('This number is before "2"')->image('www.one.com/image'),
+                    Element::create('Second')
+                ])
+            );
+        });
+
+        $this->tester->receives('generic');
+        $this->tester->assertTemplate(GenericTemplate::class, function($t) {
+            $t->assertElement(0, function($e) {
+                $e->assertTitle('First');
+                $e->assertSubtitle('This number is before "2"');
+                $e->assertImage('www.one.com/image');
+            });
+        });
+    }
+
+    /** @test */
+    public function it_can_test_template_nested_attributes()
+    {
+        $this->botman->hears('receipt', function ($bot){
+            $bot->reply(ReceiptTemplate::create()
+                ->recipientName('Marcel')
+                ->addElements([
+                    ReceiptElement::create('First')->price(1)->currency('EUR'),
+                    ReceiptElement::create('Second')->price(2)->currency('EUR')
+                ])
+                ->addAddress(ReceiptAddress::create()->city('Barcelona'))
+                ->addSummary(ReceiptSummary::create()->totalCost(3))
+            );
+        });
+
+        $this->tester->receives('receipt');
+        $this->tester->assertTemplate(ReceiptTemplate::class, function($t) {
+            $t->assertAttributes([
+                'recipient_name' => 'Marcel',
+                'elements.0.title' => 'First',
+                'elements.0.price' => 1,
+                'elements.0.currency' => 'EUR',
+                'elements.1.title' => 'Second',
+                'address.city' => 'Barcelona',
+                'summary.total_cost' => 3,
+            ]);
+        });
+    }
+
+    /** @test */
+    public function it_can_test_template_first_and_last_element()
+    {
+        $this->botman->hears('generic', function ($bot){
+            $bot->reply(GenericTemplate::create()
+                ->addElements([
+                    Element::create('First'),
+                    Element::create('Second'),
+                    Element::create('Third'),
+                    Element::create('Forth'),
+                ])
+            );
+        });
+
+        $this->tester->receives('generic');
+        $this->tester->assertTemplate(GenericTemplate::class, function($t) {
+            $t->assertFirstElement(function($e) {
+                $e->assertTitle('First');
+            });
+            $t->assertLastElement(function($e) {
+                $e->assertTitle('Forth');
+            });
+        });
+    }
+
+    /** @test */
+    public function it_can_test_template_specific_element_specific_button()
+    {
+        $this->botman->hears('generic', function ($bot){
+            $bot->reply(GenericTemplate::create()
+                ->addElements([
+                    Element::create('First')
+                        ->addButton(ElementButton::create('First')
+                            ->type('web_url')
+                            ->url('www.botman.io')
+                            ->enableExtensions()
+                            ->heightRatio(ElementButton::RATIO_COMPACT)
+                            ->fallbackUrl('www.botman.io/fallback')
+                        ),
+                    Element::create('Second')
+                ])
+            );
+        });
+
+        $this->tester->receives('generic');
+        $this->tester->assertTemplate(GenericTemplate::class, function($t) {
+            $t->assertElement(0, function($e) {
+                $e->assertButton(0, function($b) {
+                    $b->assertTitle('First')
+                        ->assertType('web_url')
+                        ->assertUrl('www.botman.io')
+                        ->assertHeightRatio(ElementButton::RATIO_COMPACT)
+                        ->assertMessengerExtension(true)
+                        ->assertFallbackUrl('www.botman.io/fallback');
+                });
+            });
+        });
+    }
+
+    /** @test */
+    public function it_can_test_template_specific_element_first_and_last_button()
+    {
+        $this->botman->hears('generic', function ($bot){
+            $bot->reply(GenericTemplate::create()
+                ->addElements([
+                    Element::create('First')->addButtons([
+                        ElementButton::create('First')->type('web_url')->url('www.botman.io'),
+                        ElementButton::create('Second')->type('web_url')->url('www.botman.io'),
+                        ElementButton::create('Third')->type('web_url')->url('www.botman.io'),
+                    ]),
+                    Element::create('Second')
+                ])
+            );
+        });
+
+        $this->tester->receives('generic');
+        $this->tester->assertTemplate(GenericTemplate::class, function($t) {
+            $t->assertElement(0, function($e) {
+                $e->assertFirstButton(function($b) {
+                    $b->assertTitle('First');
+                });
+                $e->assertLastButton(function($b) {
+                    $b->assertTitle('Third');
+                });
+            });
+        });
     }
 }
