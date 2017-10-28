@@ -2,6 +2,8 @@
 
 namespace BotMan\Studio\Testing;
 
+use BotMan\BotMan\Messages\Outgoing\Question;
+use BotMan\Drivers\Facebook\Extensions\Element;
 use PHPUnit\Framework\Assert as PHPUnit;
 
 /**

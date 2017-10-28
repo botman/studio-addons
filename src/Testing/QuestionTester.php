@@ -58,38 +58,4 @@ class QuestionTester
         $button = $this->question['actions'][$index];
         call_user_func($closure, new ButtonTester($button));
     }
-
-    public function assertHasButton($text)
-    {
-        PHPUnit::assertTrue(in_array($text, $this->pluck('text')));
-    }
-
-    public function assertHasNotButton($text)
-    {
-        PHPUnit::assertFalse(in_array($text, $this->pluck('text')));
-    }
-
-    public function assertHasValue($value)
-    {
-        PHPUnit::assertTrue(in_array($value, $this->pluck('value')));
-    }
-
-    public function assertHasNotValue($value)
-    {
-        PHPUnit::assertFalse(in_array($value, $this->pluck('value')));
-    }
-
-    public function assertButtons(array $buttons)
-    {
-        sort($buttons);
-
-        PHPUnit::assertEquals(array_sort($this->pluck('text')), $buttons);
-    }
-
-
-    private function pluck ($type) {
-        return collect($this->question['actions'])
-            ->pluck($type)
-            ->toArray();
-    }
 }

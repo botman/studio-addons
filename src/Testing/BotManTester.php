@@ -332,7 +332,7 @@ class BotManTester
             PHPUnit::assertSame($text, $question->getText());
         }
 
-        if (is_callable($closure)){
+        if (! is_null($closure)) {
             call_user_func($closure, new QuestionTester($question));
         }
 
