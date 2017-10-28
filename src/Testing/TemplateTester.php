@@ -2,16 +2,13 @@
 
 namespace BotMan\Studio\Testing;
 
-use BotMan\BotMan\Messages\Outgoing\Question;
-use function GuzzleHttp\default_ca_bundle;
 use PHPUnit\Framework\Assert as PHPUnit;
 
 /**
- * Class QuestionTester.
+ * Class TemplateTester.
  */
 class TemplateTester
 {
-
     protected $payload;
 
     public function __construct($template)

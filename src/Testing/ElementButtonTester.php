@@ -2,8 +2,6 @@
 
 namespace BotMan\Studio\Testing;
 
-use BotMan\BotMan\Messages\Outgoing\Question;
-use BotMan\Drivers\Facebook\Extensions\Element;
 use PHPUnit\Framework\Assert as PHPUnit;
 
 /**
@@ -11,7 +9,6 @@ use PHPUnit\Framework\Assert as PHPUnit;
  */
 class ElementButtonTester
 {
-
     protected $button;
 
     public function __construct(array $button)
@@ -76,7 +73,6 @@ class ElementButtonTester
 
         return $this;
     }
-
 
     public function assertHeightRatio($webview_height_ratio)
     {

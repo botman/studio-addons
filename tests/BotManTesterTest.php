@@ -2,30 +2,29 @@
 
 namespace Tests;
 
-use BotMan\BotMan\Messages\Outgoing\Actions\Button;
-use BotMan\Drivers\Facebook\Extensions\ButtonTemplate;
-use BotMan\Drivers\Facebook\Extensions\Element;
-use BotMan\Drivers\Facebook\Extensions\ElementButton;
-use BotMan\Drivers\Facebook\Extensions\GenericTemplate;
-use BotMan\Drivers\Facebook\Extensions\ListTemplate;
-use BotMan\Drivers\Facebook\Extensions\ReceiptAddress;
-use BotMan\Drivers\Facebook\Extensions\ReceiptElement;
-use BotMan\Drivers\Facebook\Extensions\ReceiptSummary;
-use BotMan\Drivers\Facebook\Extensions\ReceiptTemplate;
-use BotMan\Studio\Testing\ButtonTester;
 use Mockery as m;
 use BotMan\BotMan\BotMan;
 use PHPUnit\Framework\TestCase;
+
 use BotMan\BotMan\BotManFactory;
 use BotMan\Studio\Testing\BotManTester;
 use BotMan\BotMan\Drivers\Tests\FakeDriver;
-use BotMan\BotMan\Messages\Attachments\File;
-use BotMan\BotMan\Messages\Attachments\Audio;
+
 use BotMan\BotMan\Messages\Attachments\Image;
 use BotMan\BotMan\Messages\Attachments\Video;
 use BotMan\BotMan\Messages\Outgoing\Question;
+use BotMan\Drivers\Facebook\Extensions\Element;
 use BotMan\BotMan\Messages\Attachments\Location;
+use BotMan\BotMan\Messages\Outgoing\Actions\Button;
 use BotMan\BotMan\Messages\Outgoing\OutgoingMessage;
+use BotMan\Drivers\Facebook\Extensions\ListTemplate;
+use BotMan\Drivers\Facebook\Extensions\ElementButton;
+use BotMan\Drivers\Facebook\Extensions\ButtonTemplate;
+use BotMan\Drivers\Facebook\Extensions\ReceiptAddress;
+use BotMan\Drivers\Facebook\Extensions\ReceiptElement;
+use BotMan\Drivers\Facebook\Extensions\ReceiptSummary;
+use BotMan\Drivers\Facebook\Extensions\GenericTemplate;
+use BotMan\Drivers\Facebook\Extensions\ReceiptTemplate;
 
 class BotManTesterTest extends TestCase
 {
@@ -333,7 +332,7 @@ class BotManTesterTest extends TestCase
         });
 
         $this->tester->receives('message');
-        $this->tester->assertQuestion(null, function($q) {
+        $this->tester->assertQuestion(null, function ($q) {
             $q->assertText('question');
         });
         $this->tester->receives('answer');
@@ -353,7 +352,7 @@ class BotManTesterTest extends TestCase
         });
 
         $this->tester->receives('message');
-        $this->tester->assertQuestion(null, function($q) {
+        $this->tester->assertQuestion(null, function ($q) {
             $q->assertFallback('fallback');
             $q->assertCallbackId('callback_id');
         });
@@ -376,7 +375,7 @@ class BotManTesterTest extends TestCase
         });
 
         $this->tester->receives('message');
-        $this->tester->assertQuestion(null, function($q) {
+        $this->tester->assertQuestion(null, function ($q) {
             $q->assertButtonCount(2);
         });
     }
@@ -396,7 +395,7 @@ class BotManTesterTest extends TestCase
         });
 
         $this->tester->receives('message');
-        $this->tester->assertQuestion(null, function($q) {
+        $this->tester->assertQuestion(null, function ($q) {
             $q->assertButton(0, function($b) {
                 $b->assertText('First');
                 $b->assertValue('first');
@@ -423,7 +422,7 @@ class BotManTesterTest extends TestCase
         });
 
         $this->tester->receives('message');
-        $this->tester->assertQuestion(null, function($q) {
+        $this->tester->assertQuestion(null, function ($q) {
             $q->assertButton(0, function($b) {
                 $b->assertTextisNot('Second');
                 $b->assertValueisNot('second');
@@ -452,11 +451,11 @@ class BotManTesterTest extends TestCase
         });
 
         $this->tester->receives('message');
-        $this->tester->assertQuestion(null, function($q) {
-            $q->assertFirstButton( function($b) {
+        $this->tester->assertQuestion(null, function ($q) {
+            $q->assertFirstButton( function ($b) {
                 $b->assertText('First');
             });
-            $q->assertLastButton(function($b) {
+            $q->assertLastButton(function ($b) {
                 $b->assertText('Forth');
             });
         });
@@ -485,7 +484,7 @@ class BotManTesterTest extends TestCase
         });
 
         $this->tester->receives('button');
-        $this->tester->assertTemplate(ButtonTemplate::class, function($t) {
+        $this->tester->assertTemplate(ButtonTemplate::class, function ($t) {
             $t->assertText('text');
         });
     }
@@ -493,7 +492,7 @@ class BotManTesterTest extends TestCase
     /** @test */
     public function it_can_test_template_image_aspect_ratio()
     {
-        $this->botman->hears('generic', function ($bot){
+        $this->botman->hears('generic', function ($bot) {
             $bot->reply(GenericTemplate::create()
                 ->addElement(Element::create('title'))
                 ->addImageAspectRatio(GenericTemplate::RATIO_HORIZONTAL)
@@ -501,7 +500,7 @@ class BotManTesterTest extends TestCase
         });
 
         $this->tester->receives('generic');
-        $this->tester->assertTemplate(GenericTemplate::class, function($t) {
+        $this->tester->assertTemplate(GenericTemplate::class, function ($t) {
             $t->assertImageAspectRatio(GenericTemplate::RATIO_HORIZONTAL);
         });
     }
@@ -509,7 +508,7 @@ class BotManTesterTest extends TestCase
     /** @test */
     public function it_can_test_list_template_attributes()
     {
-        $this->botman->hears('list', function ($bot){
+        $this->botman->hears('list', function ($bot) {
             $bot->reply(ListTemplate::create()
                 ->addElement(Element::create('title'))
                 ->useCompactView()
@@ -518,7 +517,7 @@ class BotManTesterTest extends TestCase
         });
 
         $this->tester->receives('list');
-        $this->tester->assertTemplate(ListTemplate::class, function($t) {
+        $this->tester->assertTemplate(ListTemplate::class, function ($t) {
             $t->assertTopElementStyle('compact');
             $t->assertButtons(function ($b) {
                 $b->assertTitle('First');
@@ -529,14 +528,14 @@ class BotManTesterTest extends TestCase
     /** @test */
     public function it_can_test_template_attributes_is_not()
     {
-        $this->botman->hears('button', function ($bot){
+        $this->botman->hears('button', function ($bot) {
             $bot->reply(ButtonTemplate::create('text')
                 ->addButton(ElementButton::create('First')->type('web_url')->url('www.botman.io'))
             );
         });
 
         $this->tester->receives('button');
-        $this->tester->assertTemplate(ButtonTemplate::class, function($t) {
+        $this->tester->assertTemplate(ButtonTemplate::class, function ($t) {
             $t->assertTextIsNot('txet');
         });
     }
@@ -544,7 +543,7 @@ class BotManTesterTest extends TestCase
     /** @test */
     public function it_can_test_template_element_count()
     {
-        $this->botman->hears('generic', function ($bot){
+        $this->botman->hears('generic', function ($bot) {
             $bot->reply(GenericTemplate::create()
                 ->addElements([
                     Element::create('First'),
@@ -554,7 +553,7 @@ class BotManTesterTest extends TestCase
         });
 
         $this->tester->receives('generic');
-        $this->tester->assertTemplate(GenericTemplate::class, function($t) {
+        $this->tester->assertTemplate(GenericTemplate::class, function ($t) {
             $t->assertElementCount(2);
         });
     }
@@ -562,7 +561,7 @@ class BotManTesterTest extends TestCase
     /** @test */
     public function it_can_test_template_specific_element()
     {
-        $this->botman->hears('generic', function ($bot){
+        $this->botman->hears('generic', function ($bot) {
             $bot->reply(GenericTemplate::create()
                 ->addElements([
                     Element::create('First')->subtitle('This number is before "2"')->image('www.one.com/image'),
@@ -572,8 +571,8 @@ class BotManTesterTest extends TestCase
         });
 
         $this->tester->receives('generic');
-        $this->tester->assertTemplate(GenericTemplate::class, function($t) {
-            $t->assertElement(0, function($e) {
+        $this->tester->assertTemplate(GenericTemplate::class, function ($t) {
+            $t->assertElement(0, function ($e) {
                 $e->assertTitle('First');
                 $e->assertSubtitle('This number is before "2"');
                 $e->assertImage('www.one.com/image');
@@ -584,7 +583,7 @@ class BotManTesterTest extends TestCase
     /** @test */
     public function it_can_test_template_nested_attributes()
     {
-        $this->botman->hears('receipt', function ($bot){
+        $this->botman->hears('receipt', function ($bot) {
             $bot->reply(ReceiptTemplate::create()
                 ->recipientName('Marcel')
                 ->addElements([
@@ -597,7 +596,7 @@ class BotManTesterTest extends TestCase
         });
 
         $this->tester->receives('receipt');
-        $this->tester->assertTemplate(ReceiptTemplate::class, function($t) {
+        $this->tester->assertTemplate(ReceiptTemplate::class, function ($t) {
             $t->assertAttributes([
                 'recipient_name' => 'Marcel',
                 'elements.0.title' => 'First',
@@ -613,7 +612,7 @@ class BotManTesterTest extends TestCase
     /** @test */
     public function it_can_test_template_first_and_last_element()
     {
-        $this->botman->hears('generic', function ($bot){
+        $this->botman->hears('generic', function ($bot) {
             $bot->reply(GenericTemplate::create()
                 ->addElements([
                     Element::create('First'),
@@ -625,11 +624,11 @@ class BotManTesterTest extends TestCase
         });
 
         $this->tester->receives('generic');
-        $this->tester->assertTemplate(GenericTemplate::class, function($t) {
-            $t->assertFirstElement(function($e) {
+        $this->tester->assertTemplate(GenericTemplate::class, function ($t) {
+            $t->assertFirstElement(function ($e) {
                 $e->assertTitle('First');
             });
-            $t->assertLastElement(function($e) {
+            $t->assertLastElement(function ($e) {
                 $e->assertTitle('Forth');
             });
         });
@@ -638,7 +637,7 @@ class BotManTesterTest extends TestCase
     /** @test */
     public function it_can_test_template_specific_element_specific_button()
     {
-        $this->botman->hears('generic', function ($bot){
+        $this->botman->hears('generic', function ($bot) {
             $bot->reply(GenericTemplate::create()
                 ->addElements([
                     Element::create('First')
@@ -655,9 +654,9 @@ class BotManTesterTest extends TestCase
         });
 
         $this->tester->receives('generic');
-        $this->tester->assertTemplate(GenericTemplate::class, function($t) {
-            $t->assertElement(0, function($e) {
-                $e->assertButton(0, function($b) {
+        $this->tester->assertTemplate(GenericTemplate::class, function ($t) {
+            $t->assertElement(0, function ($e) {
+                $e->assertButton(0, function ($b) {
                     $b->assertTitle('First')
                         ->assertType('web_url')
                         ->assertUrl('www.botman.io')
@@ -672,7 +671,7 @@ class BotManTesterTest extends TestCase
     /** @test */
     public function it_can_test_template_specific_element_first_and_last_button()
     {
-        $this->botman->hears('generic', function ($bot){
+        $this->botman->hears('generic', function ($bot) {
             $bot->reply(GenericTemplate::create()
                 ->addElements([
                     Element::create('First')->addButtons([
@@ -686,12 +685,12 @@ class BotManTesterTest extends TestCase
         });
 
         $this->tester->receives('generic');
-        $this->tester->assertTemplate(GenericTemplate::class, function($t) {
-            $t->assertElement(0, function($e) {
-                $e->assertFirstButton(function($b) {
+        $this->tester->assertTemplate(GenericTemplate::class, function ($t) {
+            $t->assertElement(0, function ($e) {
+                $e->assertFirstButton(function ($b) {
                     $b->assertTitle('First');
                 });
-                $e->assertLastButton(function($b) {
+                $e->assertLastButton(function ($b) {
                     $b->assertTitle('Third');
                 });
             });

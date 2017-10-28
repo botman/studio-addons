@@ -2,15 +2,14 @@
 
 namespace BotMan\Studio\Testing;
 
-use BotMan\BotMan\Messages\Outgoing\Question;
 use PHPUnit\Framework\Assert as PHPUnit;
+use BotMan\BotMan\Messages\Outgoing\Question;
 
 /**
  * Class QuestionTester.
  */
 class QuestionTester
 {
-
     protected $question;
 
     public function __construct(Question $question)

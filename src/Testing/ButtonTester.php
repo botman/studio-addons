@@ -5,11 +5,10 @@ namespace BotMan\Studio\Testing;
 use PHPUnit\Framework\Assert as PHPUnit;
 
 /**
- * Class QuestionTester.
+ * Class ButtonTester.
  */
 class ButtonTester
 {
-
     protected $button;
 
     public function __construct(array $button)
