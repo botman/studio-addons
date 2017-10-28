@@ -7,65 +7,77 @@ use BotMan\Drivers\Facebook\Extensions\Element;
 use PHPUnit\Framework\Assert as PHPUnit;
 
 /**
- * Class QuestionTester.
+ * Class ElementTester
  */
-class ButtonTester
+class ElementTester
 {
 
-    protected $button;
+    protected $element;
 
-    public function __construct(array $button)
+    public function __construct(array $element)
     {
-        $this->button = $button;
+        $this->element = $element;
     }
 
-    public function assertText($text)
+    public function assertTitle($title)
     {
-        PHPUnit::assertSame($text, $this->button['text']);
+        PHPUnit::assertSame($title, $this->element['title']);
+
+        return $this;
     }
 
-    public function assertTextIsNot($text)
+    public function assertTitleIsNot($title)
     {
-        PHPUnit::assertNotSame($text, $this->button['text']);
+        PHPUnit::assertNotSame($title, $this->element['title']);
+
+        return $this;
     }
 
-    public function assertName($name)
+    public function assertSubtitle($subtitle)
     {
-        PHPUnit::assertSame($name, $this->button['name']);
+        PHPUnit::assertSame($subtitle, $this->element['subtitle']);
+
+        return $this;
     }
 
-    public function assertNameIsNot($name)
+    public function assertSubtitleIsNot($subtitle)
     {
-        PHPUnit::assertNotSame($name, $this->button['name']);
-    }
+        PHPUnit::assertNotSame($subtitle, $this->element['subtitle']);
 
-    public function assertValue($value)
-    {
-        PHPUnit::assertSame($value, $this->button['value']);
-    }
-
-    public function assertValueIsNot($value)
-    {
-        PHPUnit::assertNotSame($value, $this->button['value']);
+        return $this;
     }
 
     public function assertImage($image_url)
     {
-        PHPUnit::assertSame($image_url, $this->button['image_url']);
+        PHPUnit::assertSame($image_url, $this->element['image_url']);
+
+        return $this;
     }
 
     public function assertImageIsNot($image_url)
     {
-        PHPUnit::assertNotSame($image_url, $this->button['image_url']);
+        PHPUnit::assertNotSame($image_url, $this->element['image_url']);
+
+        return $this;
     }
 
-    public function assertAdditional($additional)
+    public function assertButton($index, $closure)
     {
-        PHPUnit::assertEqual($additional, $this->button['additional']);
+        $button = $this->element['buttons'][$index];
+        call_user_func($closure, new ElementButtonTester($button));
+
+        return $this;
     }
 
-    public function assertAdditionalIsNot($additional)
+    public function assertFirstButton($closure)
     {
-        PHPUnit::assertNotEqual($additional, $this->button['additional']);
+        return $this->assertButton(0, $closure);
+    }
+
+    public function assertLastButton($closure)
+    {
+        $last_index = count($this->element['buttons']) - 1;
+
+        return $this->assertButton($last_index, $closure);
     }
 }

@@ -7,74 +7,103 @@ use BotMan\Drivers\Facebook\Extensions\Element;
 use PHPUnit\Framework\Assert as PHPUnit;
 
 /**
- * Class QuestionTester.
+ * Class ElementButtonTester.
  */
 class ElementButtonTester
 {
 
-    protected $element;
+    protected $button;
 
-    protected $match = true;
-
-    public function __construct(array $element)
+    public function __construct(array $button)
     {
-        $this->element = $element;
-    }
-
-    public function assertButtonCount($count)
-    {
-        $this->setMatch($count == count($this->element['buttons']));
+        $this->button = $button;
 
         return $this;
     }
 
-    public function assertHasButton(array $data) {
-        $button_matches = false;
+    public function assertTitle($title)
+    {
+        PHPUnit::assertSame($title, $this->button['title']);
 
-        foreach ($this->element['buttons'] as $button) {
-            if($button_matches=$this->checkButton($button, $data)) {
-                break;
-            }
-
-        }
-        $this->setMatch($button_matches);
+        return $this;
     }
 
-    public function assertHasNotButton(array $data) {
-        $button_matches = false;
+    public function assertTitleIsNot($title)
+    {
+        PHPUnit::assertNotSame($title, $this->button['title']);
 
-        foreach ($this->element['buttons'] as $button) {
-            if($button_matches=$this->checkButton($button, $data)) {
-                break;
-            }
-
-        }
-        $this->setMatch(!$button_matches);
+        return $this;
     }
 
-    public function setMatch(bool $match) {
-        if(!$match) {
-            $this->match = $match;
-        }
+    public function assertType($type)
+    {
+        PHPUnit::assertSame($type, $this->button['type']);
+
+        return $this;
     }
 
-    public function getMatch() {
-        return $this->match;
+    public function assertTypeIsNot($type)
+    {
+        PHPUnit::assertNotSame($type, $this->button['type']);
+
+        return $this;
     }
 
-    private function checkButton($button, $data) {
-        $attributes_matches = true;
+    public function assertUrl($url)
+    {
+        PHPUnit::assertSame($url, $this->button['url']);
 
-        foreach ($data as $key => $value) {
+        return $this;
+    }
 
-            if(array_has($button, $key) && array_get($button, $key) == $value) {
-                continue;
-            }
+    public function assertUrlIsNot($url)
+    {
+        PHPUnit::assertNotSame($url, $this->button['url']);
 
-            $attributes_matches = false;
-            break;
-        }
+        return $this;
+    }
 
-        return ($attributes_matches) ? true : false;
+    public function assertPayload($payload)
+    {
+        PHPUnit::assertSame($payload, $this->button['payload']);
+
+        return $this;
+    }
+
+    public function assertPayloadIsNot($payload)
+    {
+        PHPUnit::assertNotSame($payload, $this->button['payload']);
+
+        return $this;
+    }
+
+
+    public function assertHeightRatio($webview_height_ratio)
+    {
+        PHPUnit::assertSame($webview_height_ratio, $this->button['webview_height_ratio']);
+
+        return $this;
+    }
+
+    public function assertMessengerExtension($messenger_extensions = true)
+    {
+        PHPUnit::assertSame($messenger_extensions, $this->button['messenger_extensions']);
+
+        return $this;
+    }
+
+    public function assertFallbackUrl($fallback_url)
+    {
+        PHPUnit::assertSame($fallback_url, $this->button['fallback_url']);
+
+        return $this;
+    }
+
+    public function assertShareContents($closure)
+    {
+        $share_content = $this->button['share_contents'];
+        call_user_func($closure, new TemplateTester($share_content));
+
+        return $this;
     }
 }

@@ -12,128 +12,89 @@ use PHPUnit\Framework\Assert as PHPUnit;
 class TemplateTester
 {
 
-    protected $template;
+    protected $payload;
 
     public function __construct($template)
     {
-        $this->template = $template->toArray()['attachment'];
+        $this->payload = $template->toArray()['attachment']['payload'];
+    }
+
+    public function assertText($text)
+    {
+        PHPUnit::assertSame($text, $this->payload['text']);
+
+        return $this;
+    }
+
+    public function assertTextIsNot($text)
+    {
+        PHPUnit::assertNotSame($text, $this->payload['text']);
+
+        return $this;
+    }
+
+//    public function assertSharable($sharable)
+//    {
+//        PHPUnit::assertSame($sharable, $this->payload['sharable']);
+//
+//        return $this;
+//    }
+
+    public function assertImageAspectRatio($image_aspect_ratio)
+    {
+        PHPUnit::assertSame($image_aspect_ratio, $this->payload['image_aspect_ratio']);
+
+        return $this;
+    }
+
+    public function assertTopElementStyle($top_element_style)
+    {
+        PHPUnit::assertSame($top_element_style, $this->payload['top_element_style']);
+
+        return $this;
+    }
+
+    public function assertButtons($closure)
+    {
+        $button = $this->payload['buttons'][0];
+        call_user_func($closure, new ElementButtonTester($button));
+
+        return $this;
     }
 
     public function assertElementCount($count)
     {
-        PHPUnit::assertCount($count, $this->template['payload']['elements']);
+        PHPUnit::assertCount($count, $this->payload['elements']);
 
         return $this;
     }
 
     public function assertElement($index, $closure)
     {
-
-    }
-
-    public function assertHasElement(array $data, $closure = null) {
-        $element_matches = false;
-
-        foreach ($this->template['payload']['elements'] as $element) {
-            if($element_matches = $this->checkElement($element, $data, $closure)){
-                break;
-            }
-        }
-
-        PHPUnit::assertTrue($element_matches, 'Failed asserting that template has given element');
+        $element = $this->payload['elements'][$index];
+        call_user_func($closure, new ElementTester($element));
 
         return $this;
     }
 
-    public function assertHasNotElement(array $data, $closure = null) {
-        $element_matches = false;
-
-        foreach ($this->template['payload']['elements'] as $element) {
-            if($element_matches = $this->checkElement($element, $data, $closure)){
-                break;
-            }
-        }
-
-        PHPUnit::assertFalse($element_matches, 'Failed asserting that template does not have given element');
-
-        return $this;
-    }
-
-//    public function assertElement($index, array $data, $closure = null){
-//        $element = $this->template['payload']['elements'][$index];
-//        $element_matches = $this->checkElement($element, $data, $closure);
-//
-//        PHPUnit::assertTrue($element_matches, "Failed asserting that templates element with index {$index}");
-//
-//        return $this;
-//    }
-
-    public function __call($name, $arguments)
+    public function assertFirstElement($closure)
     {
-        $kebab_name = kebab_case($name);
-
-        if(starts_with($kebab_name, 'assert') && ends_with($kebab_name, 'element')){
-            switch(explode('-', $kebab_name)[1]) {
-                case 'first':
-                    $index = 0;
-                    break;
-                case 'second':
-                    $index = 1;
-                    break;
-                case 'third':
-                    $index = 2;
-                    break;
-                case 'forth':
-                    $index = 3;
-                    break;
-                case 'fifth':
-                    $index = 4;
-                    break;
-                case 'sixth':
-                    $index = 5;
-                    break;
-                case 'seventh':
-                    $index = 6;
-                    break;
-                case 'eighth':
-                    $index = 7;
-                    break;
-                case 'ninth':
-                    $index = 8;
-                    break;
-                case 'last':
-                    $index = count($this->template['payload']['elements']) - 1;
-                    break;
-                default:
-                    $index = null;
-            }
-            if($index) {
-                return call_user_func([$this, 'assertElement'], $index, $arguments[0], $arguments[1] ?? null);
-            }
-        }
-
-        throw new \Exception("There is no method {$name}");
+        return $this->assertElement(0, $closure);
     }
 
-    private function checkElement($actual, $data, $closure) {
-        $attributes_matches = true;
+    public function assertLastElement($closure)
+    {
+        $last_index = count($this->payload['elements']) - 1;
 
-        foreach ($data as $key => $value) {
-            if(array_has($actual, $key) && array_get($actual, $key) == $value) {
-                continue;
-            }
-            $attributes_matches = false;
-            break;
+        return $this->assertElement($last_index, $closure);
+    }
+
+    public function assertAttributes($attributes)
+    {
+        foreach ($attributes as $key => $value) {
+            PHPUnit::assertSame($value, array_get($this->payload, $key));
         }
 
-        $buttons_matches = true;
-
-        if (is_callable($closure)) {
-            $elementButtonTester = new ElementButtonTester($actual);
-            call_user_func($closure, $elementButtonTester);
-            $buttons_matches = $elementButtonTester->getMatch();
-        }
-
-        return ($attributes_matches && $buttons_matches) ? true : false;
+        return $this;
     }
 }

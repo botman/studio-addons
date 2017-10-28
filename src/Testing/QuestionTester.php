@@ -74,4 +74,16 @@ class QuestionTester
 
         return $this;
     }
+
+    public function assertFirstButton($closure)
+    {
+        return $this->assertButton(0, $closure);
+    }
+
+    public function assertLastButton($closure)
+    {
+        $last_index = count($this->question['actions']) - 1;
+
+        return $this->assertButton($last_index, $closure);
+    }
 }

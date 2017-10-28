@@ -344,14 +344,14 @@ class BotManTester
      * @param bool $strict
      * @return $this
      */
-    public function assertTemplate($template, $strict = false)
+    public function assertTemplate($template, $closure = null)
     {
         $message = $this->getReply();
 
-        if ($strict) {
-            PHPUnit::assertEquals($template, $message);
-        } else {
-            PHPUnit::assertInstanceOf($template, $message);
+        PHPUnit::assertInstanceOf($template, $message);
+
+        if(is_callable($closure)) {
+            call_user_func($closure, new TemplateTester($message));
         }
 
         return $this;
