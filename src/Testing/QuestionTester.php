@@ -31,6 +31,20 @@ class QuestionTester
         return $this;
     }
 
+    public function assertTextIn(array $haystack)
+    {
+        PHPUnit::assertTrue(in_array($this->question['text'], $haystack));
+
+        return $this;
+    }
+
+    public function assertTextNotIn(array $haystack)
+    {
+        PHPUnit::assertFalse(in_array($this->question['text'], $haystack));
+
+        return $this;
+    }
+
     public function assertFallback($fallback)
     {
         PHPUnit::assertSame($fallback, $this->question['fallback']);

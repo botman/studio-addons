@@ -30,6 +30,20 @@ class ButtonTester
         return $this;
     }
 
+    public function assertTextIn(array $haystack)
+    {
+        PHPUnit::assertTrue(in_array($this->button['text'], $haystack));
+
+        return $this;
+    }
+
+    public function assertTextNotIn(array $haystack)
+    {
+        PHPUnit::assertFalse(in_array($this->button['text'], $haystack));
+
+        return $this;
+    }
+
     public function assertName($name)
     {
         PHPUnit::assertSame($name, $this->button['name']);

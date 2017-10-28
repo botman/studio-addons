@@ -340,6 +340,36 @@ class BotManTesterTest extends TestCase
     }
 
     /** @test */
+    public function it_can_test_question_text_in()
+    {
+        $this->botman->hears('message', function ($bot) {
+            $bot->ask(Question::create('question'), function ($answer) {
+                $this->say('success');
+            });
+        });
+
+        $this->tester->receives('message');
+        $this->tester->assertQuestion(null, function ($q) {
+            $q->assertTextIn(['question', 'Another question']);
+        });
+    }
+
+    /** @test */
+    public function it_can_test_question_text_not_in()
+    {
+        $this->botman->hears('message', function ($bot) {
+            $bot->ask(Question::create('question'), function ($answer) {
+                $this->say('success');
+            });
+        });
+
+        $this->tester->receives('message');
+        $this->tester->assertQuestion(null, function ($q) {
+            $q->assertTextNotIn(['Another question', 'And another question']);
+        });
+    }
+
+    /** @test */
     public function it_can_test_question_callback_and_fallback()
     {
         $question = Question::create('question')
@@ -430,6 +460,48 @@ class BotManTesterTest extends TestCase
             $q->assertButton(1, function ($b) {
                 $b->assertTextisNot('First');
                 $b->assertValueisNot('first');
+            });
+        });
+    }
+
+    /** @test */
+    public function it_can_test_question_specific_button_is_in()
+    {
+        $question = Question::create('question')
+            ->addButtons([
+                Button::create('First')->value('first'),
+            ]);
+        $this->botman->hears('message', function ($bot) use ($question) {
+            $bot->ask($question, function ($answer) {
+                $this->say('success');
+            });
+        });
+
+        $this->tester->receives('message');
+        $this->tester->assertQuestion(null, function ($q) {
+            $q->assertButton(0, function ($b) {
+                $b->assertTextIn(['First', 'Number one']);
+            });
+        });
+    }
+
+    /** @test */
+    public function it_can_test_question_specific_button_is_not_in()
+    {
+        $question = Question::create('question')
+            ->addButtons([
+                Button::create('First')->value('first'),
+            ]);
+        $this->botman->hears('message', function ($bot) use ($question) {
+            $bot->ask($question, function ($answer) {
+                $this->say('success');
+            });
+        });
+
+        $this->tester->receives('message');
+        $this->tester->assertQuestion(null, function ($q) {
+            $q->assertButton(0, function ($b) {
+                $b->assertTextNotIn(['Second', 'Number two']);
             });
         });
     }
@@ -581,6 +653,48 @@ class BotManTesterTest extends TestCase
     }
 
     /** @test */
+    public function it_can_test_template_specific_element_title_and_subtitle_in()
+    {
+        $this->botman->hears('generic', function ($bot) {
+            $bot->reply(GenericTemplate::create()
+                ->addElements([
+                    Element::create('First')->subtitle('This number is before "2"')->image('www.one.com/image'),
+                    Element::create('Second'),
+                ])
+            );
+        });
+
+        $this->tester->receives('generic');
+        $this->tester->assertTemplate(GenericTemplate::class, function ($t) {
+            $t->assertElement(0, function ($e) {
+                $e->assertTitleIn(['First', 'Number one']);
+                $e->assertSubtitleIn(['This number is before "2"', 'Next one is 2']);
+            });
+        });
+    }
+
+    /** @test */
+    public function it_can_test_template_specific_element_title_and_subtitle_not_in()
+    {
+        $this->botman->hears('generic', function ($bot) {
+            $bot->reply(GenericTemplate::create()
+                ->addElements([
+                    Element::create('First')->subtitle('This number is before "2"')->image('www.one.com/image'),
+                    Element::create('Second'),
+                ])
+            );
+        });
+
+        $this->tester->receives('generic');
+        $this->tester->assertTemplate(GenericTemplate::class, function ($t) {
+            $t->assertElement(0, function ($e) {
+                $e->assertTitleNotIn(['Second', 'Number two']);
+                $e->assertSubtitleNotIn(['This number is before "3"', 'Next one is 3']);
+            });
+        });
+    }
+
+    /** @test */
     public function it_can_test_template_nested_attributes()
     {
         $this->botman->hears('receipt', function ($bot) {
@@ -663,6 +777,56 @@ class BotManTesterTest extends TestCase
                         ->assertHeightRatio(ElementButton::RATIO_COMPACT)
                         ->assertMessengerExtension(true)
                         ->assertFallbackUrl('www.botman.io/fallback');
+                });
+            });
+        });
+    }
+
+    /** @test */
+    public function it_can_test_template_specific_element_specific_button_title_in()
+    {
+        $this->botman->hears('generic', function ($bot) {
+            $bot->reply(GenericTemplate::create()
+                ->addElements([
+                    Element::create('First')
+                        ->addButton(ElementButton::create('First')
+                            ->type('web_url')
+                            ->url('www.botman.io')
+                        ),
+                ])
+            );
+        });
+
+        $this->tester->receives('generic');
+        $this->tester->assertTemplate(GenericTemplate::class, function ($t) {
+            $t->assertElement(0, function ($e) {
+                $e->assertButton(0, function ($b) {
+                    $b->assertTitleIn(['First', 'The one before 2']);
+                });
+            });
+        });
+    }
+
+    /** @test */
+    public function it_can_test_template_specific_element_specific_button_title_not_in()
+    {
+        $this->botman->hears('generic', function ($bot) {
+            $bot->reply(GenericTemplate::create()
+                ->addElements([
+                    Element::create('First')
+                        ->addButton(ElementButton::create('First')
+                            ->type('web_url')
+                            ->url('www.botman.io')
+                        ),
+                ])
+            );
+        });
+
+        $this->tester->receives('generic');
+        $this->tester->assertTemplate(GenericTemplate::class, function ($t) {
+            $t->assertElement(0, function ($e) {
+                $e->assertButton(0, function ($b) {
+                    $b->assertTitleNotIn(['Second', 'The one before 3']);
                 });
             });
         });

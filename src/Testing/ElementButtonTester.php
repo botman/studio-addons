@@ -32,6 +32,20 @@ class ElementButtonTester
         return $this;
     }
 
+    public function assertTitleIn(array $haystack)
+    {
+        PHPUnit::assertTrue(in_array($this->button['title'], $haystack));
+
+        return $this;
+    }
+
+    public function assertTitleNotIn(array $haystack)
+    {
+        PHPUnit::assertFalse(in_array($this->button['title'], $haystack));
+
+        return $this;
+    }
+
     public function assertType($type)
     {
         PHPUnit::assertSame($type, $this->button['type']);

@@ -30,6 +30,20 @@ class ElementTester
         return $this;
     }
 
+    public function assertTitleIn(array $haystack)
+    {
+        PHPUnit::assertTrue(in_array($this->element['title'], $haystack));
+
+        return $this;
+    }
+
+    public function assertTitleNotIn(array $haystack)
+    {
+        PHPUnit::assertFalse(in_array($this->element['title'], $haystack));
+
+        return $this;
+    }
+
     public function assertSubtitle($subtitle)
     {
         PHPUnit::assertSame($subtitle, $this->element['subtitle']);
@@ -40,6 +54,20 @@ class ElementTester
     public function assertSubtitleIsNot($subtitle)
     {
         PHPUnit::assertNotSame($subtitle, $this->element['subtitle']);
+
+        return $this;
+    }
+
+    public function assertSubtitleIn(array $haystack)
+    {
+        PHPUnit::assertTrue(in_array($this->element['subtitle'], $haystack));
+
+        return $this;
+    }
+
+    public function assertSubtitleNotIn(array $haystack)
+    {
+        PHPUnit::assertFalse(in_array($this->element['subtitle'], $haystack));
 
         return $this;
     }

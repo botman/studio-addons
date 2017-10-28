@@ -320,6 +320,7 @@ class BotManTester
 
     /**
      * @param null $text
+     * @param null $closure
      * @return $this
      */
     public function assertQuestion($text = null, $closure = null)
@@ -341,7 +342,7 @@ class BotManTester
 
     /**
      * @param string $template
-     * @param bool $strict
+     * @param null $closure
      * @return $this
      */
     public function assertTemplate($template, $closure = null)
