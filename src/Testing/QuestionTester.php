@@ -21,41 +21,57 @@ class QuestionTester
     public function assertText($text)
     {
         PHPUnit::assertSame($text, $this->question['text']);
+
+        return $this;
     }
 
     public function assertTextIsNot($text)
     {
         PHPUnit::assertNotSame($text, $this->question['text']);
+
+        return $this;
     }
 
     public function assertFallback($fallback)
     {
         PHPUnit::assertSame($fallback, $this->question['fallback']);
+
+        return $this;
     }
 
     public function assertFallbackIsNot($fallback)
     {
         PHPUnit::assertNotSame($fallback, $this->question['fallback']);
+
+        return $this;
     }
 
     public function assertCallbackId($callback)
     {
         PHPUnit::assertSame($callback, $this->question['callback_id']);
+
+        return $this;
     }
 
     public function assertCallbackIdIsNot($callback)
     {
         PHPUnit::assertNotSame($callback, $this->question['callback_id']);
+
+        return $this;
     }
 
     public function assertButtonCount($count)
     {
         PHPUnit::assertCount($count, $this->question['actions']);
+
+        return $this;
     }
 
     public function assertButton($index, $closure)
     {
         $button = $this->question['actions'][$index];
         call_user_func($closure, new ButtonTester($button));
+
+        return $this;
     }
 }
