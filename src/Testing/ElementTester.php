@@ -86,6 +86,13 @@ class ElementTester
         return $this;
     }
 
+    public function assertButtonCount($count)
+    {
+        PHPUnit::assertCount($count, $this->element['buttons']);
+
+        return $this;
+    }
+
     public function assertButton($index, $closure)
     {
         $button = $this->element['buttons'][$index];
