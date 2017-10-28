@@ -350,7 +350,7 @@ class BotManTester
 
         PHPUnit::assertInstanceOf($template, $message);
 
-        if( is_callable($closure)) {
+        if (is_callable($closure)) {
             call_user_func($closure, new TemplateTester($message));
         }
 

@@ -5,11 +5,9 @@ namespace Tests;
 use Mockery as m;
 use BotMan\BotMan\BotMan;
 use PHPUnit\Framework\TestCase;
-
 use BotMan\BotMan\BotManFactory;
 use BotMan\Studio\Testing\BotManTester;
 use BotMan\BotMan\Drivers\Tests\FakeDriver;
-
 use BotMan\BotMan\Messages\Attachments\Image;
 use BotMan\BotMan\Messages\Attachments\Video;
 use BotMan\BotMan\Messages\Outgoing\Question;
@@ -396,11 +394,11 @@ class BotManTesterTest extends TestCase
 
         $this->tester->receives('message');
         $this->tester->assertQuestion(null, function ($q) {
-            $q->assertButton(0, function($b) {
+            $q->assertButton(0, function ($b) {
                 $b->assertText('First');
                 $b->assertValue('first');
             });
-            $q->assertButton(1, function($b) {
+            $q->assertButton(1, function ($b) {
                 $b->assertText('Second');
                 $b->assertValue('second');
             });
@@ -423,11 +421,11 @@ class BotManTesterTest extends TestCase
 
         $this->tester->receives('message');
         $this->tester->assertQuestion(null, function ($q) {
-            $q->assertButton(0, function($b) {
+            $q->assertButton(0, function ($b) {
                 $b->assertTextisNot('Second');
                 $b->assertValueisNot('second');
             });
-            $q->assertButton(1, function($b) {
+            $q->assertButton(1, function ($b) {
                 $b->assertTextisNot('First');
                 $b->assertValueisNot('first');
             });
@@ -452,7 +450,7 @@ class BotManTesterTest extends TestCase
 
         $this->tester->receives('message');
         $this->tester->assertQuestion(null, function ($q) {
-            $q->assertFirstButton( function ($b) {
+            $q->assertFirstButton(function ($b) {
                 $b->assertText('First');
             });
             $q->assertLastButton(function ($b) {
@@ -464,7 +462,7 @@ class BotManTesterTest extends TestCase
     /** @test */
     public function it_can_test_template()
     {
-        $this->botman->hears('generic', function ($bot){
+        $this->botman->hears('generic', function ($bot) {
             $bot->reply(GenericTemplate::create()
                 ->addElement(Element::create('title'))
             );
@@ -477,7 +475,7 @@ class BotManTesterTest extends TestCase
     /** @test */
     public function it_can_test_template_with_closure()
     {
-        $this->botman->hears('button', function ($bot){
+        $this->botman->hears('button', function ($bot) {
             $bot->reply(ButtonTemplate::create('text')
                 ->addButton(ElementButton::create('First')->type('web_url')->url('www.botman.io'))
             );
@@ -547,7 +545,7 @@ class BotManTesterTest extends TestCase
             $bot->reply(GenericTemplate::create()
                 ->addElements([
                     Element::create('First'),
-                    Element::create('Second')
+                    Element::create('Second'),
                 ])
             );
         });
@@ -565,7 +563,7 @@ class BotManTesterTest extends TestCase
             $bot->reply(GenericTemplate::create()
                 ->addElements([
                     Element::create('First')->subtitle('This number is before "2"')->image('www.one.com/image'),
-                    Element::create('Second')
+                    Element::create('Second'),
                 ])
             );
         });
@@ -588,7 +586,7 @@ class BotManTesterTest extends TestCase
                 ->recipientName('Marcel')
                 ->addElements([
                     ReceiptElement::create('First')->price(1)->currency('EUR'),
-                    ReceiptElement::create('Second')->price(2)->currency('EUR')
+                    ReceiptElement::create('Second')->price(2)->currency('EUR'),
                 ])
                 ->addAddress(ReceiptAddress::create()->city('Barcelona'))
                 ->addSummary(ReceiptSummary::create()->totalCost(3))
@@ -648,7 +646,7 @@ class BotManTesterTest extends TestCase
                             ->heightRatio(ElementButton::RATIO_COMPACT)
                             ->fallbackUrl('www.botman.io/fallback')
                         ),
-                    Element::create('Second')
+                    Element::create('Second'),
                 ])
             );
         });
@@ -679,7 +677,7 @@ class BotManTesterTest extends TestCase
                         ElementButton::create('Second')->type('web_url')->url('www.botman.io'),
                         ElementButton::create('Third')->type('web_url')->url('www.botman.io'),
                     ]),
-                    Element::create('Second')
+                    Element::create('Second'),
                 ])
             );
         });
