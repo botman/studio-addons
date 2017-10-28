@@ -2,6 +2,8 @@
 
 namespace BotMan\Studio\Providers;
 
+use BotMan\Studio\Console\Commands\BotManMakeConversation;
+use BotMan\Studio\Console\Commands\BotManMakeMiddleware;
 use View;
 use Illuminate\Http\Request;
 use Spatie\Menu\Laravel\Menu;
@@ -20,6 +22,8 @@ class StudioServiceProvider extends ServiceProvider
         $this->commands([
             BotManListDrivers::class,
             BotManInstallDriver::class,
+            BotManMakeMiddleware::class,
+            BotManMakeConversation::class,
         ]);
 
         $this->discoverCommands();

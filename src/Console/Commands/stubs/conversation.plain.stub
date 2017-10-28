@@ -1,0 +1,18 @@
+<?php
+
+namespace DummyNamespace;
+
+use BotMan\BotMan\Messages\Conversations\Conversation;
+
+class DummyClass extends Conversation
+{
+    /**
+     * Start the conversation.
+     *
+     * @return mixed
+     */
+    public function run()
+    {
+        //
+    }
+}
