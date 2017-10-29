@@ -3,7 +3,6 @@
 namespace BotMan\Studio\Console\Commands;
 
 use Illuminate\Console\GeneratorCommand;
-use Symfony\Component\Console\Input\InputOption;
 
 class BotManMakeMiddleware extends GeneratorCommand
 {
@@ -20,7 +19,6 @@ class BotManMakeMiddleware extends GeneratorCommand
      * @var string
      */
     protected $description = 'Create a new middleware class.';
-
 
     /**
      * The type of class being generated.

@@ -21,7 +21,6 @@ class BotManMakeConversation extends GeneratorCommand
      */
     protected $description = 'Create a new conversation class.';
 
-
     /**
      * The type of class being generated.
      *
