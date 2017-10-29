@@ -9,6 +9,8 @@ use Illuminate\Support\ServiceProvider;
 use TheCodingMachine\Discovery\Discovery;
 use BotMan\Studio\Console\Commands\BotManListDrivers;
 use BotMan\Studio\Console\Commands\BotManInstallDriver;
+use BotMan\Studio\Console\Commands\BotManMakeMiddleware;
+use BotMan\Studio\Console\Commands\BotManMakeConversation;
 
 class StudioServiceProvider extends ServiceProvider
 {
@@ -20,6 +22,8 @@ class StudioServiceProvider extends ServiceProvider
         $this->commands([
             BotManListDrivers::class,
             BotManInstallDriver::class,
+            BotManMakeMiddleware::class,
+            BotManMakeConversation::class,
         ]);
 
         $this->discoverCommands();
