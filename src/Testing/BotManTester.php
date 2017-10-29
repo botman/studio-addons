@@ -110,11 +110,12 @@ class BotManTester
 
     /**
      * @param string $message
+     * @param null $payload
      * @return $this
      */
-    public function receives($message)
+    public function receives($message, $payload = null)
     {
-        return $this->receivesRaw(new IncomingMessage($message, $this->user_id, $this->channel));
+        return $this->receivesRaw(new IncomingMessage($message, $this->user_id, $this->channel, $payload));
     }
 
     /**
