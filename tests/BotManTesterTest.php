@@ -18,12 +18,10 @@ use BotMan\BotMan\Messages\Outgoing\OutgoingMessage;
 
 class TemplateFake
 {
-
     public $text;
 
     public function __construct($text)
     {
-
         $this->text = $text;
     }
 }
