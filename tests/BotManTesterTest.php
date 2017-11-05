@@ -16,11 +16,13 @@ use BotMan\BotMan\Messages\Outgoing\Question;
 use BotMan\BotMan\Messages\Attachments\Location;
 use BotMan\BotMan\Messages\Outgoing\OutgoingMessage;
 
-class TemplateFake {
+class TemplateFake
+{
 
     public $text;
 
-    public function __construct($text) {
+    public function __construct($text)
+    {
 
         $this->text = $text;
     }
