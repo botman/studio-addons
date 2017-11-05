@@ -16,6 +16,16 @@ use BotMan\BotMan\Messages\Outgoing\Question;
 use BotMan\BotMan\Messages\Attachments\Location;
 use BotMan\BotMan\Messages\Outgoing\OutgoingMessage;
 
+class TemplateFake {
+
+    public $text;
+
+    public function __construct($text) {
+
+        $this->text = $text;
+    }
+}
+
 class BotManTesterTest extends TestCase
 {
     /** @var BotManTester */
@@ -180,6 +190,62 @@ class BotManTesterTest extends TestCase
             'message 2',
             'message 3',
         ]);
+    }
+
+    /** @test */
+    public function it_can_assert_a_template_class()
+    {
+        $this->botman->hears('message', function ($bot) {
+            $bot->reply(new TemplateFake('my message'));
+        });
+
+        $this->tester->receives('message');
+        $this->tester->assertTemplate(TemplateFake::class);
+    }
+
+    /** @test */
+    public function it_can_assert_a_template_object()
+    {
+        $this->botman->hears('message', function ($bot) {
+            $bot->reply(new TemplateFake('my message'));
+        });
+
+        $this->tester->receives('message');
+        $this->tester->assertTemplate(new TemplateFake('my message'), true);
+    }
+
+    /** @test */
+    public function it_can_assert_a_template_is_in_an_array()
+    {
+        $this->botman->hears('message', function ($bot) {
+            $bot->reply(new TemplateFake('message1'));
+        });
+
+        $templates = [
+            new TemplateFake('message1'),
+            new TemplateFake('message2'),
+            new TemplateFake('message3'),
+        ];
+
+        $this->tester->receives('message');
+        $this->tester->assertTemplateIn($templates);
+    }
+
+    /** @test */
+    public function it_can_assert_a_template_is_not_in_an_array()
+    {
+        $this->botman->hears('message', function ($bot) {
+            $bot->reply(new TemplateFake('message4'));
+        });
+
+        $templates = [
+            new TemplateFake('message1'),
+            new TemplateFake('message2'),
+            new TemplateFake('message3'),
+        ];
+
+        $this->tester->receives('message');
+        $this->tester->assertTemplateNotIn($templates);
     }
 
     /** @test */
