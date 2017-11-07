@@ -355,6 +355,30 @@ class BotManTester
     }
 
     /**
+     * @param array $templates
+     * @return $this
+     */
+    public function assertTemplateIn(array $templates)
+    {
+        $message = $this->getReply();
+        PHPUnit::assertTrue(in_array($message, $templates));
+
+        return $this;
+    }
+
+    /**
+     * @param array $templates
+     * @return $this
+     */
+    public function assertTemplateNotIn(array $templates)
+    {
+        $message = $this->getReply();
+        PHPUnit::assertFalse(in_array($message, $templates));
+
+        return $this;
+    }
+
+    /**
      * @param OutgoingMessage $message
      * @return $this
      */
