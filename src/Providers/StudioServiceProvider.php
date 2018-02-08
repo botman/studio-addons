@@ -2,8 +2,6 @@
 
 namespace BotMan\Studio\Providers;
 
-use View;
-use Illuminate\Http\Request;
 use Illuminate\Support\ServiceProvider;
 use TheCodingMachine\Discovery\Discovery;
 use BotMan\Studio\Console\Commands\BotManListDrivers;
