@@ -22,7 +22,7 @@ class StudioServiceProvider extends ServiceProvider
             BotManInstallDriver::class,
             BotManMakeMiddleware::class,
             BotManMakeConversation::class,
-            BotManMakeTest::class
+            BotManMakeTest::class,
         ]);
 
         $this->discoverCommands();
