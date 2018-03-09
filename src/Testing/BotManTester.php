@@ -321,9 +321,10 @@ class BotManTester
 
     /**
      * @param null $text
+     * @param null $closure
      * @return $this
      */
-    public function assertQuestion($text = null)
+    public function assertQuestion($text = null, $closure = null)
     {
         /** @var Question $question */
         $question = $this->getReply();
@@ -333,22 +334,26 @@ class BotManTester
             PHPUnit::assertSame($text, $question->getText());
         }
 
+        if (! is_null($closure)) {
+            call_user_func($closure, new QuestionTester($question));
+        }
+
         return $this;
     }
 
     /**
      * @param string $template
-     * @param bool $strict
+     * @param null $closure
      * @return $this
      */
-    public function assertTemplate($template, $strict = false)
+    public function assertTemplate($template, $closure = null)
     {
         $message = $this->getReply();
 
-        if ($strict) {
-            PHPUnit::assertEquals($template, $message);
-        } else {
-            PHPUnit::assertInstanceOf($template, $message);
+        PHPUnit::assertInstanceOf($template, $message);
+
+        if (is_callable($closure)) {
+            call_user_func($closure, new TemplateTester($message));
         }
 
         return $this;
