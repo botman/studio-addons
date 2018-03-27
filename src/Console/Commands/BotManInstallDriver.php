@@ -58,7 +58,7 @@ class BotManInstallDriver extends Command
             $drivers = json_decode($response->getBody(), true);
         } catch (\Exception $e) {
             $this->error('Unable to fetch BotMan driver repository.');
-            $this->error('Please check your internet connection ang try again.');
+            $this->error('Please check your internet connection and try again.');
             exit(1);
         }
 
