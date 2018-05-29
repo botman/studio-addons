@@ -50,7 +50,7 @@ class BotManMakeConversation extends GeneratorCommand
      */
     protected function getDefaultNamespace($rootNamespace)
     {
-        return $rootNamespace.'\Http\Conversations';
+        return $rootNamespace.'\Conversations';
     }
 
     /**
