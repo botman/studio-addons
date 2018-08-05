@@ -34,7 +34,7 @@ class BotManMakeTest extends GeneratorCommand
      */
     protected function getStub()
     {
-        return __DIR__.'/stubs/test.stub';
+        return __DIR__ . '/stubs/test.stub';
     }
 
     /**
@@ -45,6 +45,6 @@ class BotManMakeTest extends GeneratorCommand
      */
     protected function getDefaultNamespace($rootNamespace)
     {
-        return $rootNamespace.'\..\tests\Botman';
+        return $rootNamespace . '\..\tests\BotMan';
     }
 }
