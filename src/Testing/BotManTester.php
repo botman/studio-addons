@@ -229,7 +229,12 @@ class BotManTester
         $this->driver->setEventName($name);
         $this->driver->setEventPayload($payload);
 
-        return $this->receivesRaw(new IncomingMessage('', $this->user_id, $this->channel));
+        $result = $this->receivesRaw(new IncomingMessage('', $this->user_id, $this->channel));
+        
+        $this->driver->setEventName(null);
+        $this->driver->setEventPayload(null);
+        
+        return $result;
     }
 
     /**
