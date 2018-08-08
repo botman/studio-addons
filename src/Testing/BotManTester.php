@@ -120,13 +120,14 @@ class BotManTester
 
     /**
      * @param string $message
+     * @param null $payload
      * @return BotManTester
      */
-    public function receivesInteractiveMessage($message)
+    public function receivesInteractiveMessage($message, $payload = null)
     {
         $this->driver->isInteractiveMessageReply = true;
 
-        return $this->receives($message);
+        return $this->receives($message, $payload);
     }
 
     /**
