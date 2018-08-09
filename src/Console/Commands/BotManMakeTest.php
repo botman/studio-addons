@@ -45,6 +45,6 @@ class BotManMakeTest extends GeneratorCommand
      */
     protected function getDefaultNamespace($rootNamespace)
     {
-        return $rootNamespace.'\..\tests\Botman';
+        return $rootNamespace.'\..\tests\BotMan';
     }
 }
