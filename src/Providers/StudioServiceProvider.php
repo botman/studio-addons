@@ -5,6 +5,7 @@ namespace BotMan\Studio\Providers;
 use Illuminate\Support\ServiceProvider;
 use TheCodingMachine\Discovery\Discovery;
 use BotMan\Studio\Console\Commands\BotManMakeTest;
+use BotMan\Studio\Console\Commands\BotManCacheClear;
 use BotMan\Studio\Console\Commands\BotManListDrivers;
 use BotMan\Studio\Console\Commands\BotManInstallDriver;
 use BotMan\Studio\Console\Commands\BotManMakeMiddleware;
@@ -23,6 +24,7 @@ class StudioServiceProvider extends ServiceProvider
             BotManMakeMiddleware::class,
             BotManMakeConversation::class,
             BotManMakeTest::class,
+            BotManCacheClear::class,
         ]);
 
         $this->discoverCommands();
