@@ -2,10 +2,10 @@
 
 namespace BotMan\Studio\Console\Commands;
 
+use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
-use Illuminate\Console\GeneratorCommand;
 
-class BotManCacheClear extends GeneratorCommand
+class BotManCacheClear extends Command
 {
     /**
      * The name and signature of the console command.
