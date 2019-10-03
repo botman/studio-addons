@@ -37,12 +37,12 @@ class BotManTesterTest extends TestCase
     /** @var BotMan */
     protected $botman;
 
-    public function tearDown()
+    public function tearDown() :void
     {
         m::close();
     }
 
-    protected function setUp()
+    protected function setUp() :void
     {
         parent::setUp();
 
