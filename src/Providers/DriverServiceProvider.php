@@ -2,8 +2,8 @@
 
 namespace BotMan\Studio\Providers;
 
-use Illuminate\Support\ServiceProvider;
 use BotMan\BotMan\Drivers\DriverManager;
+use Illuminate\Support\ServiceProvider;
 use TheCodingMachine\Discovery\Discovery;
 
 class DriverServiceProvider extends ServiceProvider
