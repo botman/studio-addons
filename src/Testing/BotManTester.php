@@ -3,17 +3,17 @@
 namespace BotMan\Studio\Testing;
 
 use BotMan\BotMan\BotMan;
-use Illuminate\Support\Collection;
-use PHPUnit\Framework\Assert as PHPUnit;
 use BotMan\BotMan\Drivers\Tests\FakeDriver;
-use BotMan\BotMan\Messages\Attachments\File;
 use BotMan\BotMan\Messages\Attachments\Audio;
+use BotMan\BotMan\Messages\Attachments\File;
 use BotMan\BotMan\Messages\Attachments\Image;
-use BotMan\BotMan\Messages\Attachments\Video;
-use BotMan\BotMan\Messages\Outgoing\Question;
 use BotMan\BotMan\Messages\Attachments\Location;
+use BotMan\BotMan\Messages\Attachments\Video;
 use BotMan\BotMan\Messages\Incoming\IncomingMessage;
 use BotMan\BotMan\Messages\Outgoing\OutgoingMessage;
+use BotMan\BotMan\Messages\Outgoing\Question;
+use Illuminate\Support\Collection;
+use PHPUnit\Framework\Assert as PHPUnit;
 
 /**
  * Class BotManTester.
@@ -231,10 +231,10 @@ class BotManTester
         $this->driver->setEventPayload($payload);
 
         $result = $this->receivesRaw(new IncomingMessage('', $this->user_id, $this->channel));
-        
+
         $this->driver->setEventName(null);
         $this->driver->setEventPayload(null);
-        
+
         return $result;
     }
 
