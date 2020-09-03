@@ -2,19 +2,19 @@
 
 namespace Tests;
 
-use Mockery as m;
 use BotMan\BotMan\BotMan;
-use PHPUnit\Framework\TestCase;
 use BotMan\BotMan\BotManFactory;
-use BotMan\Studio\Testing\BotManTester;
 use BotMan\BotMan\Drivers\Tests\FakeDriver;
-use BotMan\BotMan\Messages\Attachments\File;
 use BotMan\BotMan\Messages\Attachments\Audio;
+use BotMan\BotMan\Messages\Attachments\File;
 use BotMan\BotMan\Messages\Attachments\Image;
-use BotMan\BotMan\Messages\Attachments\Video;
-use BotMan\BotMan\Messages\Outgoing\Question;
 use BotMan\BotMan\Messages\Attachments\Location;
+use BotMan\BotMan\Messages\Attachments\Video;
 use BotMan\BotMan\Messages\Outgoing\OutgoingMessage;
+use BotMan\BotMan\Messages\Outgoing\Question;
+use BotMan\Studio\Testing\BotManTester;
+use Mockery as m;
+use PHPUnit\Framework\TestCase;
 
 class TemplateFake
 {
@@ -37,12 +37,12 @@ class BotManTesterTest extends TestCase
     /** @var BotMan */
     protected $botman;
 
-    public function tearDown()
+    public function tearDown(): void
     {
         m::close();
     }
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

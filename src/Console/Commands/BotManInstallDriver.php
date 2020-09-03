@@ -2,8 +2,8 @@
 
 namespace BotMan\Studio\Console\Commands;
 
-use GuzzleHttp\Client;
 use BotMan\Studio\Composer;
+use GuzzleHttp\Client;
 use Illuminate\Console\Command;
 
 class BotManInstallDriver extends Command
