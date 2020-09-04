@@ -30,7 +30,7 @@ class Composer extends BaseComposer
      */
     protected function installationCommandProcess($package)
     {
-        if (version_compare(Application::version, '5.8.0', '<')) {
+        if (version_compare(Application::VERSION, '5.8.0', '<')) {
             $process = $this->getProcess();
 
             return $process->setCommandLine(trim($this->findComposer().' require '.$package));
