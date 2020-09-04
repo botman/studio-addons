@@ -37,6 +37,7 @@ class ComposerTest extends TestCase
 
         $process->shouldReceive('run')->once()->with(m::type('Closure'))->andReturnUsing(function ($callable) {
             $callable();
+
             return 0;
         })->shouldReceive('isSuccessful')->once()->andReturnTrue();
 
