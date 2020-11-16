@@ -93,6 +93,17 @@ class BotManTester
     }
 
     /**
+     * @param string $channel
+     * @return $this
+     */
+    public function setChannel($channel)
+    {
+        $this->channel = $channel ?? $this->channel;
+
+        return $this;
+    }
+
+    /**
      * @param IncomingMessage $message
      * @return $this
      */
