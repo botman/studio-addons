@@ -99,7 +99,7 @@ class BotManTesterTest extends TestCase
     public function it_can_fake_channel()
     {
         $this->botman->hears('message', function ($bot) {
-            $bot->reply('Recipient: ' . $bot->getMessage()->getRecipient());
+            $bot->reply('Recipient: '.$bot->getMessage()->getRecipient());
         });
 
         $this->tester->setChannel(123);
