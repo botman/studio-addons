@@ -5,6 +5,7 @@ namespace BotMan\Studio\Testing;
 use BotMan\BotMan\BotMan;
 use BotMan\BotMan\Drivers\Tests\FakeDriver;
 use BotMan\BotMan\Messages\Attachments\Audio;
+use BotMan\BotMan\Messages\Attachments\Contact;
 use BotMan\BotMan\Messages\Attachments\File;
 use BotMan\BotMan\Messages\Attachments\Image;
 use BotMan\BotMan\Messages\Attachments\Location;
@@ -142,7 +143,28 @@ class BotManTester
 
         return $this->receivesRaw($message);
     }
+    
+        /**
+     * @param  string  $phone
+     * @param  string  $first_name
+     * @param  string  $last_name
+     * @param  string  $vcard
+     * @return $this
+     */
+    public function receivesContact($phone = '', $first_name = '', $last_name = '', $vcard = '')
+    {
+        $message = new IncomingMessage(Contact::PATTERN, $this->user_id, $this->channel);
+        $message->setContact(new Contact(
+            $phone,
+            $first_name,
+            $last_name,
+            $this->user_id,
+            $vcard
+        ));
 
+        return $this->receivesRaw($message);
+    }
+    
     /**
      * @param array $urls
      * @return $this
