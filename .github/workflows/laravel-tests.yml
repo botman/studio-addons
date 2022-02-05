@@ -12,8 +12,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php: [7.2]
-        laravel: [7.x, 6.x, 5.8, 5.7, 5.6, 5.5]
+        php: [7.2, 8.0]
+        laravel: [7.x, 6.x, 5.8, 5.7, 5.6, 5.5, 9.x]
 
     name: PHP${{ matrix.php }} with Laravel ${{ matrix.laravel }}
 
@@ -47,8 +47,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php: [7.3]
-        laravel: [8.x, 7.x, 6.x, 5.8, 5.7, 5.5]
+        php: [7.3, 8.0]
+        laravel: [8.x, 7.x, 6.x, 5.8, 5.7, 5.5, 9.x]
 
     name: PHP${{ matrix.php }} with Laravel ${{ matrix.laravel }}
 
@@ -81,8 +81,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php: [7.4]
-        laravel: [8.x, 7.x, 6.x, 5.8]
+        php: [7.4, 8.0]
+        laravel: [8.x, 7.x, 6.x, 5.8, 9.x]
 
     name: PHP${{ matrix.php }} with Laravel ${{ matrix.laravel }}
 
