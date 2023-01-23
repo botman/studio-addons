@@ -96,6 +96,21 @@ class BotManTesterTest extends TestCase
     }
 
     /** @test */
+    public function it_can_fake_channel()
+    {
+        $this->botman->hears('message', function ($bot) {
+            $bot->reply('Recipient: '.$bot->getMessage()->getRecipient());
+        });
+
+        $this->tester->setChannel(123);
+        $this->tester->receives('message');
+        $messages = $this->tester->getMessages();
+
+        $this->assertCount(1, $messages);
+        $this->tester->assertReply('Recipient: 123');
+    }
+
+    /** @test */
     public function it_can_assert_replies()
     {
         $this->botman->hears('message', function ($bot) {
